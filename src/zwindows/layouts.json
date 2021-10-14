@@ -1,0 +1,490 @@
+{
+  "TabBarColor": "#333",
+  "ActiveWindowTabButtonColor": "#333",
+  "ActiveWindowTabButtonTextColor": "#ff6b81",
+  "IgnoredProcessNames": [
+    "ShellExperienceHost",
+    "TextInputHost",
+    "WWAHost",
+    "SystemSettings",
+    "WinStore.App",
+    "Windows Shell Experience Host",
+    "Microsoft Text Input Application",
+    "DWM Notification Window",
+    "Microsoft Store",
+    "Settings",
+    "Program Manager"
+  ],
+  "DisabledMinimize": false,
+  "DefaultWindowsTabNotificationOn": true,
+  "DeltaForAutoDetectWindowLayout": 50,
+  "MonitorsLayouts": {
+    "monitor_xmi3444_{4d36e96e-e325-11ce-bfc1-08002be10318}": {
+      "IsAvailable": true,
+      "Id": "monitor_xmi3444_{4d36e96e-e325-11ce-bfc1-08002be10318}",
+      "Name": "xmi3444",
+      "PortId": "0003",
+      "RealWidth": 3440,
+      "RealHeight": 1440,
+      "Width": 3440,
+      "Height": 1410,
+      "X": 0,
+      "Y": 0,
+      "Layouts": [
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 797,
+          "DockY": 694,
+          "X": 0,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 2535,
+          "DockY": 457,
+          "X": 50,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 2543,
+          "DockY": 836,
+          "X": 50,
+          "Y": 50,
+          "Width": 50,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 2526,
+          "DockY": 75,
+          "X": 50,
+          "Y": 0,
+          "Width": 50,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 1670,
+          "DockY": 693,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        }
+      ]
+    },
+    "monitor_xmi23c2_{4d36e96e-e325-11ce-bfc1-08002be10318}": {
+      "IsAvailable": true,
+      "Id": "monitor_xmi23c2_{4d36e96e-e325-11ce-bfc1-08002be10318}",
+      "Name": "xmi23c2",
+      "PortId": "0007",
+      "RealWidth": 1920,
+      "RealHeight": 1080,
+      "Width": 1920,
+      "Height": 1050,
+      "X": 3440,
+      "Y": 0,
+      "Layouts": [
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 489,
+          "DockY": 58,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 1
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 496,
+          "DockY": 1061,
+          "X": 0,
+          "Y": 50,
+          "Width": 100,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 1
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 497,
+          "DockY": 520,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 1
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 834,
+          "DockY": 194,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 2
+        }
+      ]
+    },
+    "monitor_cmn15e7_{4d36e96e-e325-11ce-bfc1-08002be10318}": {
+      "IsAvailable": false,
+      "Id": "monitor_cmn15e7_{4d36e96e-e325-11ce-bfc1-08002be10318}",
+      "Name": "cmn15e7",
+      "PortId": null,
+      "RealWidth": 1920,
+      "RealHeight": 1080,
+      "Width": 1920,
+      "Height": 1050,
+      "X": 3440,
+      "Y": 369,
+      "Layouts": [
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 914,
+          "DockY": 491,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 320,
+          "DockY": 491,
+          "X": 0,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 1540,
+          "DockY": 491,
+          "X": 50,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        }
+      ]
+    },
+    "monitor_deld0d7_{4d36e96e-e325-11ce-bfc1-08002be10318}": {
+      "IsAvailable": false,
+      "Id": null,
+      "Name": null,
+      "PortId": null,
+      "RealWidth": 1080,
+      "RealHeight": 1920,
+      "Width": 1080,
+      "Height": 1890,
+      "X": 1920,
+      "Y": -745,
+      "Layouts": [
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 489,
+          "DockY": 58,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 496,
+          "DockY": 1061,
+          "X": 0,
+          "Y": 50,
+          "Width": 100,
+          "Height": 50,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 497,
+          "DockY": 520,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        }
+      ]
+    },
+    "monitor_del4073_{4d36e96e-e325-11ce-bfc1-08002be10318}": {
+      "IsAvailable": false,
+      "Id": null,
+      "Name": null,
+      "PortId": null,
+      "RealWidth": 1920,
+      "RealHeight": 1080,
+      "Width": 1920,
+      "Height": 1050,
+      "X": 0,
+      "Y": 0,
+      "Layouts": [
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 914,
+          "DockY": 491,
+          "X": 0,
+          "Y": 0,
+          "Width": 100,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 320,
+          "DockY": 491,
+          "X": 0,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        },
+        {
+          "DesktopName": "default",
+          "TabsBar": {
+            "Enable": true,
+            "MaxWidth": 0,
+            "LeftOffset": 0,
+            "Opacity": 0.7
+          },
+          "DockX": 1540,
+          "DockY": 491,
+          "X": 50,
+          "Y": 0,
+          "Width": 50,
+          "Height": 100,
+          "Offset": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "MonitorRatio": 0
+        }
+      ]
+    }
+  },
+  "WindowEventListeners": []
+}
