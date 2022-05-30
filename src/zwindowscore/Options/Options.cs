@@ -22,6 +22,12 @@ namespace zwindowscore.Options
 
         public int CenterTaskBarDelay { get ;set; } = 5000;
 
+        public float TabButtonsOpacity { get; set; } = 1f;
+
+        public int TabButtonIconSize { get; set; } = 20;
+        public int TabButtonWidth { get; set; } = 100;
+        public int TabButtonHeight { get; set; } = 20;
+
         public List<string> IgnoredProcessNames = new List<string>();
         public List<string> NoTabBarDesktopNames = new List<string>();
 

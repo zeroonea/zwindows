@@ -44,9 +44,9 @@ namespace zwindowscore.Utils
             set
             {
                 _maxWidth = value;
-                _bar.MaximumSize = new System.Drawing.Size(_maxWidth, 25);
-                _pnlWindows.MaximumSize = new System.Drawing.Size(_maxWidth-50, 50);
-                _wrapper.MaximumSize = new System.Drawing.Size(_maxWidth-25, 50);
+                _bar.MaximumSize = new System.Drawing.Size(_maxWidth, Global.Settings.TabButtonHeight);
+                _pnlWindows.MaximumSize = new System.Drawing.Size(_maxWidth-50, Global.Settings.TabButtonHeight);
+                _wrapper.MaximumSize = new System.Drawing.Size(_maxWidth-25, Global.Settings.TabButtonHeight);
             }
             get
             {
@@ -71,6 +71,7 @@ namespace zwindowscore.Utils
 
             _wrapper = new FlowLayoutPanel();
             _wrapper.WrapContents = false;
+            //_wrapper.Padding = new Padding(0);
 
             _pnlWindows = new FlowLayoutPanel();
 
@@ -272,7 +273,7 @@ namespace zwindowscore.Utils
                 return;
             }
             //Console.WriteLine("Bar Width: {0}", _pnl.Width);
-            _pnlWindows.Width = WindowButtons.Count * 100;
+            _pnlWindows.Width = WindowButtons.Count * Global.Settings.TabButtonWidth;
             //_pnlWindows.Height = 25;
             _wrapper.Width = _pnlWindows.Width + 25;
             //_wrapper.Height = 25;

@@ -36,30 +36,34 @@ namespace zwindowscore.Utils
         {
             TitleEvent = Global.Settings != null ? Global.Settings.DefaultWindowsTabNotificationOn : false;
 
+            var tmp = (int)Math.Round((Global.Settings.TabButtonHeight - Global.Settings.TabButtonIconSize) / 2f);
+
             _label = new Label();
             _label.Text = "";
             _label.ForeColor = Color.White;
             _label.Font = new Font("Arial", 9, FontStyle.Regular);
             _label.AutoSize = false;
             _label.AutoEllipsis = true;
-            _label.Location = new Point(24, 5);
-            _label.Size = new System.Drawing.Size(76, 20);
+            _label.Location = new Point(Global.Settings.TabButtonIconSize + 8, 0);
+            _label.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth - (Global.Settings.TabButtonIconSize + 8), Global.Settings.TabButtonHeight);
+            _label.TextAlign = ContentAlignment.MiddleLeft;
+            _label.UseCompatibleTextRendering = true;
 
             _tooltip = new ToolTip();
             _tooltip.SetToolTip(_label, "Click to active");
             _tooltip.ShowAlways = true;
 
             _icon = new PictureBox();
-            _icon.Width = 16;
-            _icon.Height = 16;
+            _icon.Width = Global.Settings.TabButtonIconSize;
+            _icon.Height = Global.Settings.TabButtonIconSize;
             _icon.SizeMode = PictureBoxSizeMode.StretchImage;
-            _icon.Location = new Point(5, 5);
+            _icon.Location = new Point(tmp, tmp);
 
             Panel = new CustomPanel();
             Panel.Margin = new Padding(0);
             Panel.Controls.Add(_label);
             Panel.Controls.Add(_icon);
-            Panel.Size = new System.Drawing.Size(100, 25);
+            Panel.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth, Global.Settings.TabButtonHeight);
             Panel.TabButton = this;
             Panel.Cursor = Cursors.Hand;
 

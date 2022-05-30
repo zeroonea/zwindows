@@ -149,7 +149,7 @@ namespace zwindowscore
                 {
                     Global.TabButtonsBars[tbkey].Bar.Hide();
                 }
-                //Global.TabButtonsBars[tbkey].Opacity = 0.8;
+                Global.TabButtonsBars[tbkey].Opacity = Global.Settings.TabButtonsOpacity;
             }
             var bar = Global.TabButtonsBars[tbkey];
 
