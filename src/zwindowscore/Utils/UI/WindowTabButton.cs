@@ -11,6 +11,7 @@ namespace zwindowscore.Utils
     public class WindowTabButton
     {
         private Label _label;
+        private Label _lblDesktopIndex;
         private ToolTip _tooltip;
         private PictureBox _icon;
         public IntPtr Hwnd { get; set; }
@@ -29,6 +30,14 @@ namespace zwindowscore.Utils
         }
         private int DragState = 0;
 
+        public int Desktop
+        {
+            set
+            {
+                _lblDesktopIndex.Text = $"{value + 1}";
+            }
+        }
+
         //public delegate void MouseRightClick(WindowTabButton source);
         //public MouseRightClick MyRightClick;
 
@@ -37,15 +46,15 @@ namespace zwindowscore.Utils
             TitleEvent = Global.Settings != null ? Global.Settings.DefaultWindowsTabNotificationOn : false;
 
             var tmp = (int)Math.Round((Global.Settings.TabButtonHeight - Global.Settings.TabButtonIconSize) / 2f);
-
+            var labelX = Global.Settings.TabButtonIconSize + 2;
             _label = new Label();
             _label.Text = "";
             _label.ForeColor = Color.White;
             _label.Font = new Font("Arial", 9, FontStyle.Regular);
             _label.AutoSize = false;
             _label.AutoEllipsis = true;
-            _label.Location = new Point(Global.Settings.TabButtonIconSize + 8, 0);
-            _label.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth - (Global.Settings.TabButtonIconSize + 8), Global.Settings.TabButtonHeight);
+            _label.Location = new Point(labelX, 0);
+            _label.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth - labelX, Global.Settings.TabButtonHeight);
             _label.TextAlign = ContentAlignment.MiddleLeft;
             _label.UseCompatibleTextRendering = true;
 
@@ -57,10 +66,22 @@ namespace zwindowscore.Utils
             _icon.Width = Global.Settings.TabButtonIconSize;
             _icon.Height = Global.Settings.TabButtonIconSize;
             _icon.SizeMode = PictureBoxSizeMode.StretchImage;
-            _icon.Location = new Point(tmp, tmp);
-
+            _icon.Location = new Point(0, tmp);
+            
+            _lblDesktopIndex = new Label();
+            _lblDesktopIndex.Text = "";
+            _lblDesktopIndex.ForeColor = Color.Black;
+            _lblDesktopIndex.BackColor = Color.Transparent;
+            _lblDesktopIndex.Font = new Font("Arial", 8, FontStyle.Bold);
+            _lblDesktopIndex.Location = new Point(0, (Global.Settings.TabButtonHeight-9)/2);
+            _lblDesktopIndex.Size = new System.Drawing.Size(9, 18);
+            _lblDesktopIndex.TextAlign = ContentAlignment.BottomLeft;
+            _lblDesktopIndex.UseCompatibleTextRendering = true;
+            _lblDesktopIndex.Parent = _icon;
+            
             Panel = new CustomPanel();
             Panel.Margin = new Padding(0);
+            //Panel.Controls.Add(_label2);
             Panel.Controls.Add(_label);
             Panel.Controls.Add(_icon);
             Panel.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth, Global.Settings.TabButtonHeight);
@@ -104,7 +125,7 @@ namespace zwindowscore.Utils
                 DragState = 0;
                 BackColor = _iconColor;
                 TextColor = Color.White;
-                Console.WriteLine($"DragState: {DragState}");
+                //Console.WriteLine($"DragState: {DragState}");
             }
         }
 
@@ -124,7 +145,7 @@ namespace zwindowscore.Utils
                 { 
                     // Mouse start to move
                     DragState = 2;
-                    Console.WriteLine($"DragState: {DragState}");
+                    //Console.WriteLine($"DragState: {DragState}");
                     BackColor = Global.CustomColors["DragWindowTab"];
                     TextColor = Color.Black;
                 }
@@ -135,7 +156,7 @@ namespace zwindowscore.Utils
                 var d = Math.Abs(Parent.Bar.Location.X - Cursor.Position.X);
                 var index = (int)Math.Floor(d/Panel.Width + 0.0);
                 var oldIndex = (int)Math.Floor(Panel.Location.X/Panel.Width + 0.0);
-                Console.WriteLine($"DragState: {DragState}, {d}, {Panel.Location.X}, {oldIndex}, {index}");
+                //Console.WriteLine($"DragState: {DragState}, {d}, {Panel.Location.X}, {oldIndex}, {index}");
 
                 if(oldIndex != index)
                 {
@@ -176,6 +197,11 @@ namespace zwindowscore.Utils
 
         public void Active()
         {
+            if (!Global.IsHwndOnCurrentDesktop(Hwnd) && Global.Settings.LockTabButtonBetweenDesktops)
+            {
+                return;
+            }
+
             var title = Win32Helper.GetWindowTitle(Hwnd);
             if (string.IsNullOrEmpty(title))
             {
@@ -197,6 +223,11 @@ namespace zwindowscore.Utils
 
         public void Snap()
         {
+            if (!Global.IsHwndOnCurrentDesktop(Hwnd) && Global.Settings.LockTabButtonBetweenDesktops)
+            {
+                return;
+            }
+
             Win32Helper.SetDesktopAndMonitor(Parent.Handle);
             Win32Helper.SnapWindowToLayout(Hwnd, Global.CurrentMonitor, Layout);
             Win32Helper.BringWindowToFront(Hwnd);
@@ -259,12 +290,14 @@ namespace zwindowscore.Utils
                 if (_isActive)
                 {
                     BackColor = Global.GetColor(Global.Settings.ActiveWindowTabButtonColor);
+                    _lblDesktopIndex.ForeColor = Color.White;
                     /*TextColor = System.Drawing.ColorTranslator
                         .FromHtml(Global.Settings.ActiveWindowTabButtonTextColor);*/
                 }
                 else
                 {
                     BackColor = _iconColor;
+                    _lblDesktopIndex.ForeColor = Color.Black;
                     //TextColor = Color.White;
                 }
             }

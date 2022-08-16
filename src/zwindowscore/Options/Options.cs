@@ -28,6 +28,8 @@ namespace zwindowscore.Options
         public int TabButtonWidth { get; set; } = 100;
         public int TabButtonHeight { get; set; } = 20;
 
+        public bool LockTabButtonBetweenDesktops { get; set; } = true;
+
         public List<string> IgnoredProcessNames = new List<string>();
         public List<string> NoTabBarDesktopNames = new List<string>();
 

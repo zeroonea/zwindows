@@ -253,12 +253,15 @@ namespace zwindowscore
             
             if(flag || forceShow)
             {
+                var monitors = Monitor.GetMonitors();
                 var i = 0;
-                foreach(var mn in Global.Settings.MonitorsLayouts.Keys)
+                foreach(var mon in monitors)
                 {
-                    if(monitorId != null && mn != monitorId) continue;
+                    var monId = mon.DeviceId.CleanMonitorId();
 
-                    var monitor = Global.Settings.MonitorsLayouts[mn];
+                    if(monitorId != null && monId != monitorId) continue;
+
+                    var monitor = Global.Settings.MonitorsLayouts[monId];
                     if(!monitor.IsAvailable) continue;
                     var layouts = monitor.Layouts.Where(p => (p.MonitorRatio == 0 
                         || (p.MonitorRatio == 1 && monitor.IsPortrait) 
@@ -652,6 +655,11 @@ namespace zwindowscore
                 TaskbarTool.Taskbars.ApplyStyles();
                 Thread.Sleep(10);
             }
+        }
+
+        private void mniResetAllWindows_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

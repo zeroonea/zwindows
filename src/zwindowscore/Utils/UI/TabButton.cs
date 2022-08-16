@@ -25,7 +25,7 @@ namespace zwindowscore.Utils
             _icon = new PictureBox();
             _icon.Width = Global.Settings.TabButtonIconSize;
             _icon.Height = Global.Settings.TabButtonIconSize;
-            _icon.SizeMode = PictureBoxSizeMode.StretchImage;
+            _icon.SizeMode = PictureBoxSizeMode.CenterImage;
             var tmp = (int)Math.Round((Global.Settings.TabButtonHeight - Global.Settings.TabButtonIconSize) / 2f);
             _icon.Location = new Point(tmp, tmp);
 

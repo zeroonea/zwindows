@@ -254,13 +254,20 @@ namespace zwindowscore
             var name = tmps[1];
             var portId = tmps[tmps.Count - 1];
             tmps.RemoveAt(tmps.Count - 1);
-            var id = String.Join("_", tmps);
 
-            md.Id = id;
+            md.Id = mi.DeviceId.CleanMonitorId();
             md.Name = name;
             md.PortId = portId;
 
             return md;
+        }
+
+
+        public static string CleanMonitorId(this string monitorId)
+        {
+            var tmps = monitorId.ToLower().Split('\\').ToList();
+            tmps.RemoveAt(tmps.Count - 1);
+            return String.Join("_", tmps);
         }
 
         public static MonitorDevice ParseMonitor(MonitorDeviceInfo mi, MonitorDevice md = null)
@@ -445,7 +452,14 @@ namespace zwindowscore
 
         public static bool IsHwndOnCurrentDesktop(IntPtr hwnd)
         {
-            return WindowsDesktop.VirtualDesktop.Current.Id == WindowsDesktop.VirtualDesktop.FromHwnd(hwnd).Id;
+            try
+            {
+                return WindowsDesktop.VirtualDesktop.Current.Id == WindowsDesktop.VirtualDesktop.FromHwnd(hwnd).Id;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

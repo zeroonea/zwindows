@@ -45,6 +45,7 @@
             this.mniSnapAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mniToggleTabBarAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mniToggleTabBarVisible = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniResetAllWindows = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mniSaveDesktop = new System.Windows.Forms.ToolStripMenuItem();
             this.mniLoadDesktop = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mniTaskBarHide = new System.Windows.Forms.ToolStripMenuItem();
             this.mniCenterTaskbarIcons = new System.Windows.Forms.ToolStripMenuItem();
+            this.mniTransparentTaskbar = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mniExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabLayouts = new System.Windows.Forms.TabControl();
@@ -85,7 +87,6 @@
             this.btnToggleDetectWindow = new System.Windows.Forms.Button();
             this.btnAddWindow = new System.Windows.Forms.Button();
             this.txtSelectedWindow = new System.Windows.Forms.TextBox();
-            this.mniTransparentTaskbar = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -224,6 +225,7 @@
             this.mniSnapAll,
             this.mniToggleTabBarAlwaysOnTop,
             this.mniToggleTabBarVisible,
+            this.mniResetAllWindows,
             this.toolStripSeparator4,
             this.mniSaveDesktop,
             this.mniLoadDesktop,
@@ -236,7 +238,7 @@
             this.toolStripSeparator3,
             this.mniExit});
             this.ctxmNotifyIcon.Name = "ctxmNotifyIcon";
-            this.ctxmNotifyIcon.Size = new System.Drawing.Size(195, 292);
+            this.ctxmNotifyIcon.Size = new System.Drawing.Size(195, 314);
             // 
             // mniRefreshTaskBars
             // 
@@ -269,6 +271,13 @@
             this.mniToggleTabBarVisible.Size = new System.Drawing.Size(194, 22);
             this.mniToggleTabBarVisible.Text = "TabBars Display";
             this.mniToggleTabBarVisible.Click += new System.EventHandler(this.mniToggleTabBarVisible_Click);
+            // 
+            // mniResetAllWindows
+            // 
+            this.mniResetAllWindows.Name = "mniResetAllWindows";
+            this.mniResetAllWindows.Size = new System.Drawing.Size(194, 22);
+            this.mniResetAllWindows.Text = "Reset All Windows";
+            this.mniResetAllWindows.Click += new System.EventHandler(this.mniResetAllWindows_Click);
             // 
             // toolStripSeparator4
             // 
@@ -319,6 +328,13 @@
             this.mniCenterTaskbarIcons.Size = new System.Drawing.Size(194, 22);
             this.mniCenterTaskbarIcons.Text = "Center Taskbar Icons";
             this.mniCenterTaskbarIcons.Click += new System.EventHandler(this.mniCenterTaskbarIcons_Click);
+            // 
+            // mniTransparentTaskbar
+            // 
+            this.mniTransparentTaskbar.Name = "mniTransparentTaskbar";
+            this.mniTransparentTaskbar.Size = new System.Drawing.Size(194, 22);
+            this.mniTransparentTaskbar.Text = "Transparent Taskbar";
+            this.mniTransparentTaskbar.Click += new System.EventHandler(this.mniTransparentTaskbar_Click);
             // 
             // toolStripSeparator3
             // 
@@ -690,13 +706,6 @@
             this.txtSelectedWindow.Size = new System.Drawing.Size(462, 23);
             this.txtSelectedWindow.TabIndex = 2;
             // 
-            // mniTransparentTaskbar
-            // 
-            this.mniTransparentTaskbar.Name = "mniTransparentTaskbar";
-            this.mniTransparentTaskbar.Size = new System.Drawing.Size(194, 22);
-            this.mniTransparentTaskbar.Text = "Transparent Taskbar";
-            this.mniTransparentTaskbar.Click += new System.EventHandler(this.mniTransparentTaskbar_Click);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -791,6 +800,7 @@
         private System.Windows.Forms.Button btnHideTaskbar;
         private System.Windows.Forms.ToolStripMenuItem mniCenterTaskbarIcons;
         private System.Windows.Forms.ToolStripMenuItem mniTransparentTaskbar;
+        private System.Windows.Forms.ToolStripMenuItem mniResetAllWindows;
     }
 }
 

@@ -135,7 +135,7 @@ namespace zwindowscore.Utils
             var tabBtn = panel.TabButton;
             _ctxTabBtnMenuTopmostItem.Checked = tabBtn.IsWindowTopMost;
             _ctxTabBtnMenuNotificationItem.Checked = tabBtn.TitleEvent;
-            var dn = Win32Helper.GetDesktop(tabBtn.Hwnd);
+            var dn = Win32Helper.GetDesktopName(tabBtn.Hwnd);
             if(dn == Global.CurrentDesktopName)
             {
                 _ctxTabBtnMenuDesktopItem.Checked = true;
@@ -201,6 +201,7 @@ namespace zwindowscore.Utils
                 Win32Helper.PauseWinEventHook = true;
                 WindowsDesktop.VirtualDesktopHelper.MoveToDesktop(tabBtn.Hwnd, vd.VirtualDesktop);
                 Win32Helper.PauseWinEventHook = false;
+                tabBtn.Desktop = vd.Index;
             }
         }
 
@@ -241,6 +242,9 @@ namespace zwindowscore.Utils
 
         public WindowTabButton AddTabWindowButton(WindowTabButton tbtn)
         {
+            var vd = Win32Helper.GetDesktop(tbtn.Hwnd);
+            if(vd == null) return null;
+
             WindowButtons.Add(tbtn);
             tbtn.Parent = this;
             tbtn.Panel.ContextMenuStrip = _ctxTabBtnMenu;
@@ -249,6 +253,8 @@ namespace zwindowscore.Utils
             tbtn.Panel.ResumeLayout(false);
             _pnlWindows.ResumeLayout(false);
             UpdateLocation();
+            
+            tbtn.Desktop = vd.Index;
             return tbtn;
         }
 
@@ -290,9 +296,9 @@ namespace zwindowscore.Utils
             _location.Y = Y;
             Location = _location;
 
-            Console.WriteLine($"---bar: {Key}");
-            Console.WriteLine($"_pnlWindows.Width: {_pnlWindows.Width}");
-            Console.WriteLine($"_wrapper.Width: {_wrapper.Width}");
+            //Console.WriteLine($"---bar: {Key}");
+            //Console.WriteLine($"_pnlWindows.Width: {_pnlWindows.Width}");
+            //Console.WriteLine($"_wrapper.Width: {_wrapper.Width}");
         }
 
         public Form Bar

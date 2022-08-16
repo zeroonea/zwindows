@@ -83,6 +83,7 @@ namespace zwindowscore
                 cbDesktops.SelectedItem = layout.DesktopName;
             }
 
+            lblMonitorName.Text = _device.Name;
             lblDisplayWidth.Text = device.Width.ToString();
             lblDisplayHeight.Text = device.Height.ToString();
 

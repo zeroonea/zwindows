@@ -96,11 +96,11 @@ namespace zwindowscore
         {
             _ctxTabBtnMenu.Items.Clear();
             _ctxTabBtnMenu.Items.Add($"Update Layout #{_rectangle.Text} (X: {_layout.X}%, Y: {_layout.Y}%, Width: {_layout.Width}%, Height: {_layout.Height}%)");
-            if(Global.CountLayouts(_monitor) > 1)
-            {
+            //if(Global.CountLayouts(_monitor) > 1)
+            //{
                 _ctxTabBtnMenu.Items.Add(new ToolStripSeparator());
                 _ctxTabBtnMenu.Items.Add($"Remove Layout #{_rectangle.Text}");
-            }
+            //}
             _ctxTabBtnMenu.Items.Add(new ToolStripSeparator());
             _ctxTabBtnMenu.Items.Add("Add New Layout");
 
@@ -111,12 +111,12 @@ namespace zwindowscore
         private void _ctxTabBtnMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             var text = e.ClickedItem.Text;
-            if (text == $"Remove #{_rectangle.Text}")
+            if (text == $"Remove Layout #{_rectangle.Text}")
             {
-                if(Global.CountLayouts(_monitor) <= 1)
-                {
-                    return;
-                }
+                //if(Global.CountLayouts(_monitor) <= 1)
+                //{
+                //    return;
+                //}
                 /*var confirmResult =  MessageBox.Show(_rectangle.Label.Form, $"Are you sure to delete layout #{_rectangle.Text}?", "Confirm Delete!",
                                      MessageBoxButtons.YesNo);
                 if (confirmResult == DialogResult.Yes)

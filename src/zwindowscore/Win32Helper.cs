@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using zwindowscore.Options;
+using WindowsDesktop;
 
 namespace zwindowscore
 {
@@ -33,7 +34,7 @@ namespace zwindowscore
             return desktopName;
         }
 
-        public static string GetDesktop(IntPtr hwnd)
+        public static string GetDesktopName(IntPtr hwnd)
         {
             var vd = WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);
             if(vd != null)
@@ -42,6 +43,11 @@ namespace zwindowscore
             }
 
             return null;
+        }
+
+        public static VirtualDesktop GetDesktop(IntPtr hwnd)
+        {
+            return WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);
         }
 
         public static void SetDesktop(IntPtr hwnd)
