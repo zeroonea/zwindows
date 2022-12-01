@@ -14,6 +14,7 @@ using zwindowscore.Utils.UI;
 using System.Drawing;
 using static zwindowscore.Monitor;
 using zwindowscore.Options;
+using WindowsDesktop;
 
 namespace zwindowscore
 {
@@ -180,8 +181,8 @@ namespace zwindowscore
             desks.ForEach(p => VirtualDesktops.Add(new VirtualDesktopInfo{
                 VirtualDesktop = p,
                 Id = p.Id,
-                Index = p.Index,
-                Name = Win32Helper.GetDesktopName(p.Id, p.Index)
+                Index = Win32Helper.GetDesktopIndex(p),
+                Name = Win32Helper.GetDesktopName(p.Id, Win32Helper.GetDesktopIndex(p))
             }));
         }
 
@@ -454,7 +455,7 @@ namespace zwindowscore
         {
             try
             {
-                return WindowsDesktop.VirtualDesktop.Current.Id == WindowsDesktop.VirtualDesktop.FromHwnd(hwnd).Id;
+                return WindowsDesktop.VirtualDesktop.Current.Id == VirtualDesktop.FromHwnd(hwnd).Id;
             }
             catch
             {

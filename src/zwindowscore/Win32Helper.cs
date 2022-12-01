@@ -50,6 +50,12 @@ namespace zwindowscore
             return WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);
         }
 
+        public static int GetDesktopIndex(VirtualDesktop vd)
+	    {
+			var desktops = WindowsDesktop.VirtualDesktop.GetDesktops();
+			return Array.IndexOf(desktops, vd);
+	    }
+
         public static void SetDesktop(IntPtr hwnd)
         {
             var vd = WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);

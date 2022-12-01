@@ -7,6 +7,7 @@ using zwindowscore.Utils.UI;
 using System.Linq;
 using zwindowscore.Properties;
 using zwindowscore.Options;
+using WindowsDesktop;
 
 namespace zwindowscore.Utils
 {
@@ -199,7 +200,7 @@ namespace zwindowscore.Utils
             if(vd != null)
             { 
                 Win32Helper.PauseWinEventHook = true;
-                WindowsDesktop.VirtualDesktopHelper.MoveToDesktop(tabBtn.Hwnd, vd.VirtualDesktop);
+                VirtualDesktop.MoveToDesktop(tabBtn.Hwnd, vd.VirtualDesktop);
                 Win32Helper.PauseWinEventHook = false;
                 tabBtn.Desktop = vd.Index;
             }
@@ -254,7 +255,7 @@ namespace zwindowscore.Utils
             _pnlWindows.ResumeLayout(false);
             UpdateLocation();
             
-            tbtn.Desktop = vd.Index;
+            tbtn.Desktop = Win32Helper.GetDesktopIndex(vd);
             return tbtn;
         }
 
