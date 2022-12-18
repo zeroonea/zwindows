@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json;
 using zwindowscore.Options;
 using WindowsDesktop;
+using System.Windows.Input;
 
 namespace zwindowscore
 {
@@ -177,13 +178,26 @@ namespace zwindowscore
                 }
                 else
                 {
-                    tab.Parent.RemoveTabWindowButton(hwnd);
+                    if(tab.Parent != null)
+                    { 
+                        tab.Parent.RemoveTabWindowButton(hwnd);
+                    }
                     bar.AddTabWindowButton(tab);
                 }
             }
             else
             {
                 tab = bar.AddTabWindowButton(hwnd, title);
+                if(tab == null)
+                {
+                    if (Global.TabButtonsBars[tbkey].WindowButtons.Count == 0)
+                    {
+                        
+                        Global.TabButtonsBars[tbkey].Dispose();
+                        Global.TabButtonsBars.Remove(tbkey);
+                    }
+                    return null;
+                }
                 Global.TabButtonWindows[hwnd] = tab;
             }
             tab.Layout = layout;
@@ -311,7 +325,7 @@ namespace zwindowscore
                     if(layout != null)
                     {
                         Console.WriteLine($"layout#{monitor.Layouts.IndexOf(layout)}, {layout.Left}, {layout.Top}, {layout.CWidth}, {layout.CHeight}");
-                        var tbkey = CreateOrUpdateTabButton(window.Handle, monitor, layout);
+                        CreateOrUpdateTabButton(window.Handle, monitor, layout);
                     }
                 }
             }
@@ -626,6 +640,29 @@ namespace zwindowscore
         {
             int exStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
             return (exStyle & WS_EX_TOPMOST) == WS_EX_TOPMOST;
+        }
+
+        public static bool IsAltTabWindow(IntPtr hWnd)
+        {
+            // The window must be visible
+            if (!IsWindowVisible(hWnd))
+                return false;
+
+            // The window must be a root owner
+            if (GetAncestor(hWnd, GetAncestorFlags.GetRootOwner) != hWnd)
+                return false;
+
+            // The window must not be cloaked by the shell
+            DwmGetWindowAttribute(hWnd, DwmWindowAttribute.Cloaked, out uint cloaked, sizeof(uint));
+            if (cloaked == DWM_CLOAKED_SHELL)
+                return false;
+
+            // The window must not have the extended style WS_EX_TOOLWINDOW
+            int style = GetWindowLong(hWnd, GWL_EXSTYLE);
+            if ((style & WS_EX_TOOLWINDOW) != 0)
+                return false;
+    
+            return true;
         }
     }
 }

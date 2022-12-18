@@ -227,8 +227,7 @@ namespace zwindowscore.Utils
                 Text = title,
                 Icon = IconHelper.GetAppIcon(hwnd)
             };
-            AddTabWindowButton(tbtn);
-            return tbtn;
+            return AddTabWindowButton(tbtn);
         }
 
         public WindowTabButton RemoveTabWindowButton(IntPtr hwnd)

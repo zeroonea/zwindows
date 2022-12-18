@@ -55,6 +55,8 @@ namespace zwindowscore
         public const byte AC_SRC_ALPHA = 0x01;
 
         public const int GWL_HWNDPARENT = -8;
+
+        const uint DWM_CLOAKED_SHELL = 0x00000002;
         
         public delegate void WinEventDelegate(IntPtr hWinEventHook, EventType eventType,
             IntPtr hwnd, WinEventObjectId idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -257,6 +259,9 @@ namespace zwindowscore
         [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DeleteObject(IntPtr hObject);
+
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmGetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, out uint pvAttribute, int cbAttribute);
 
     }
 }

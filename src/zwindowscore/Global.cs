@@ -421,6 +421,13 @@ namespace zwindowscore
             var collection = new List<DesktopWindow>();
             Win32Helper.EnumDelegate filter = delegate(IntPtr hWnd, int lParam)
             {
+                if(IntPtr.Zero == hWnd) return true;
+
+                if (!Win32Helper.IsAltTabWindow(hWnd))
+                {
+                    return true;
+                }
+
                 if (currentVirtualDesktopOnly && 
                     !IsHwndOnCurrentDesktop(hWnd))
                 {

@@ -56,7 +56,10 @@ namespace zwindowscore
                     {
                         MethodInvoker action = delegate {
                             var tab = Global.TabButtonWindows[hwnd];
-                            tab.Parent.RemoveTabWindowButton(tab);
+                            if(tab.Parent != null)
+                            { 
+                                tab.Parent.RemoveTabWindowButton(tab);
+                            }
                             Global.TabButtonWindows.Remove(hwnd);
                         };
                         Global.Main.BeginInvoke(action);
@@ -105,7 +108,10 @@ namespace zwindowscore
                             if (Global.TabButtonWindows.ContainsKey(hwnd))
                             {
                                 var tab = Global.TabButtonWindows[hwnd];
-                                tab.Parent.SelectedWindowTabButton = tab;
+                                if(tab.Parent != null)
+                                { 
+                                    tab.Parent.SelectedWindowTabButton = tab;
+                                }
                             }
                         }
                     }
