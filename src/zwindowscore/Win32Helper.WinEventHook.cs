@@ -122,31 +122,7 @@ namespace zwindowscore
                     if (CmdShow.SW_MAXIMIZE == wp.showCmd)
                     {
                         DragWindowState = 0;
-                        PauseWinEventHook = true;
-                        Utils.Timer.StartTimer("Start detect/move window to layout");
-                        if(IsTopLevelWindows(hwnd))
-                        {
-                            SetDesktopAndMonitor(hwnd);
-                            Debug.WriteLine("{0:x8} is maximized", hwnd.ToInt32());
-                            if (currentMonitor != null)
-                            {
-                                Point lpPoint;
-                                GetCursorPos(out lpPoint);
-                                var layout = Global.GetMonitorLayout(null, lpPoint,
-                                    Global.GetMonitorId(currentMonitor), Global.CurrentDesktopName);
-                                if (layout != null)
-                                {
-                                    SnapWindowToLayout(hwnd, Global.CurrentMonitor, layout);
-
-                                    MethodInvoker action = delegate {
-                                        CreateOrUpdateTabButton(hwnd, Global.CurrentMonitor, layout);
-                                    };
-                                    Global.Main.BeginInvoke(action);
-                                }
-                            }
-                            Utils.Timer.StopTimer("End detect/move window to layout");
-                        }
-                        PauseWinEventHook = false;
+                        SnapWindow(hwnd);
                         break;
                     }
                     else if(!Global.Settings.DisableDragWindowOverlay)

@@ -14,7 +14,6 @@ namespace zwindowscore.Utils.UI
     {
         //private System.Timers.Timer _autoOffTimer;
         private int _initialStyle;
-        private IntPtr _owner = IntPtr.Zero;
 
         public LayoutOverlay()
         {
@@ -69,29 +68,37 @@ namespace zwindowscore.Utils.UI
 
         public void SetOwner(IntPtr hwndOwner)
         {
+            if(_owner == IntPtr.Zero)
+            {
+                _isTopMostDefault = Win32Helper.IsWindowTopMost(hwndOwner);
+            }
             if(_owner == hwndOwner) return;
 
-            Debug.WriteLine("Set owner");
+            //Debug.WriteLine("Set owner");
+
+            //var oldTopMost = Win32Helper.IsWindowTopMost(hwndOwner);
 
             _owner = hwndOwner;
 
-            Win32Helper.SetWindowPos(_current.Handle, 
+            Win32Helper.SetWindowPos(_current.Handle,
                 Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);
-            Win32Helper.SetWindowPos(hwndOwner, 
+            Win32Helper.SetWindowPos(hwndOwner,
                 Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);
 
-            Win32Helper.SetWindowPos(_current.Handle, 
+            Win32Helper.SetWindowPos(_current.Handle,
                 Win32Helper.HWND_NOTOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);
-            Win32Helper.SetWindowPos(hwndOwner, 
+            Win32Helper.SetWindowPos(hwndOwner,
                 Win32Helper.HWND_NOTOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);
 
-            Win32Helper.SetWindowLong(hwndOwner, -8, this.Handle);
+            //Win32Helper.SetWindowLong(hwndOwner, -8, this.Handle);
         }
 
 
         #region Static
 
         private static LayoutOverlay _current = null;
+        private static IntPtr _owner = IntPtr.Zero;
+        private static bool _isTopMostDefault = false;
 
         public static void ShowOverlay(IntPtr hwndOwner, int x, int y, int width, int height)
         {
@@ -134,6 +141,12 @@ namespace zwindowscore.Utils.UI
                 _current.Dispose();
                 _current = null;
             }
+            if (_isTopMostDefault)
+            {
+                Win32Helper.SetWindowPos(_owner,
+                    Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);
+            }
+            _owner = IntPtr.Zero;
         }
 
         #endregion

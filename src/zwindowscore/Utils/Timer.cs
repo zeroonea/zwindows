@@ -13,12 +13,15 @@ namespace zwindowscore.Utils
 
         public static void StartTimer(string message = null, string key = "default")
         {
+#if DEBUG
             _timers[key] = Stopwatch.StartNew();
             Console.WriteLine("Start {0} ({1})", message, key);
+#endif
         }
 
         public static void StopTimer(string message = null, string key = "default")
         {
+#if DEBUG
             if(_timers.ContainsKey(key))
             {
                 var _timer = _timers[key];
@@ -31,6 +34,7 @@ namespace zwindowscore.Utils
             {
                 Console.WriteLine("{0} timer not found", key);
             }
+#endif
         }
     }
 }

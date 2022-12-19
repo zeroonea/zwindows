@@ -11,7 +11,7 @@ namespace zwindowscore.Options
         public string TabBarColor = "#333";
         public string ActiveWindowTabButtonColor = "#333";
         public string ActiveWindowTabButtonTextColor = "#ff6b81";
-        public string WindowDragOverlayColor = "#8bc34a";
+        public string WindowDragOverlayColor = "#2192FF";
         
         public bool DisableDragWindowOverlay { get; set; } = false;
         public bool DisableAutoSnapWindowAfterDrag { get; set; } = true;
@@ -35,6 +35,8 @@ namespace zwindowscore.Options
 
         public Dictionary<string, MonitorDevice> MonitorsLayouts { get; set; } = new Dictionary<string, MonitorDevice>();
         public List<WindowEventListener> WindowEventListeners { get; set; } = new List<WindowEventListener>();
+
+        public List<string> NoFullSnapWhenAutoSnapProcesses = new List<string>();
     }
 
 

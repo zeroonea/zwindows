@@ -216,6 +216,20 @@ namespace zwindowscore
             ShowWindow(hwnd, CmdShow.SW_RESTORE);
             var border_thickness = GetBorderSize(hwnd);
 
+            if(Global.Settings.NoFullSnapWhenAutoSnapProcesses != null 
+                && Global.Settings.NoFullSnapWhenAutoSnapProcesses.Count > 0)
+            {
+                var processName = Win32Helper.GetProcessFileName(hwnd);
+                foreach(var name in Global.Settings.NoFullSnapWhenAutoSnapProcesses)
+                {
+                    if(processName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        PauseWinEventHook = false;
+                        return;
+                    }
+                }
+            }
+
             // TODO
             var mdx = monitor.X > 0 ? 1 : 0;
             var mdy = monitor.Y > 0 ? 1 : 0;
@@ -663,6 +677,35 @@ namespace zwindowscore
                 return false;
     
             return true;
+        }
+
+        public static void SnapWindow(IntPtr hwnd)
+        {
+            if(IsTopLevelWindows(hwnd))
+            {
+                PauseWinEventHook = true;
+                Utils.Timer.StartTimer("Start detect/move window to layout");
+                SetDesktopAndMonitor(hwnd);
+                Debug.WriteLine("{0:x8} is maximized", hwnd.ToInt32());
+                if (currentMonitor != null)
+                {
+                    Point lpPoint;
+                    GetCursorPos(out lpPoint);
+                    var layout = Global.GetMonitorLayout(null, lpPoint,
+                        Global.GetMonitorId(currentMonitor), Global.CurrentDesktopName);
+                    if (layout != null)
+                    {
+                        SnapWindowToLayout(hwnd, Global.CurrentMonitor, layout);
+
+                        MethodInvoker action = delegate {
+                            CreateOrUpdateTabButton(hwnd, Global.CurrentMonitor, layout);
+                        };
+                        Global.Main.BeginInvoke(action);
+                    }
+                }
+                Utils.Timer.StopTimer("End detect/move window to layout");
+                PauseWinEventHook = false;
+            }
         }
     }
 }
