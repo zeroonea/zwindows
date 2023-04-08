@@ -69,6 +69,17 @@ namespace TaskbarTool
             }
         }
 
+        public static bool IsTaskbarsVisible()
+        {
+            var result = false;
+            FindAll(true);
+            foreach(var bar in Bars)
+            { 
+                result = Win32Helper.IsWindowVisible(bar.HWND);
+            }
+            return result;
+        }
+
         public static void ToggleTaskbarsTransparent(bool transparent, bool applyStyle = false)
         {
             var opacity = (byte)(transparent ? 0 : 255);

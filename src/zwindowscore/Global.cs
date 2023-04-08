@@ -315,11 +315,14 @@ namespace zwindowscore
 
         public static void UpdateLayout(MonitorDevice monitor, MonitorLayout layout)
         {
-            layout.Left = (monitor.Width * layout.X) / 100;
-            layout.Top = (monitor.Height * layout.Y) / 100;
+            var mw = Settings.HideTaskbars ? monitor.RealWidth : monitor.Width;
+            var mh = Settings.HideTaskbars ? monitor.RealHeight : monitor.Height;
 
-            layout.Bottom = layout.Top + (monitor.Height * layout.Height) / 100;
-            layout.Right = layout.Left + (monitor.Width * layout.Width) / 100;
+            layout.Left = (mw * layout.X) / 100;
+            layout.Top = (mh * layout.Y) / 100;
+
+            layout.Bottom = layout.Top + (mh * layout.Height) / 100;
+            layout.Right = layout.Left + (mw * layout.Width) / 100;
 
             layout.CWidth = layout.Right - layout.Left;
             layout.CHeight = layout.Bottom - layout.Top;
@@ -423,16 +426,12 @@ namespace zwindowscore
             {
                 if(IntPtr.Zero == hWnd) return true;
 
-                if (!Win32Helper.IsAltTabWindow(hWnd))
+                // The window must be visible
+                if (!Win32Helper.IsWindowVisible(hWnd))
                 {
                     return true;
                 }
 
-                if (currentVirtualDesktopOnly && 
-                    !IsHwndOnCurrentDesktop(hWnd))
-                {
-                    return true;
-                }
                 var result = new StringBuilder(255);
                 Win32Helper.GetWindowText(hWnd, result, result.Capacity + 1);
                 string title = result.ToString();
@@ -441,15 +440,29 @@ namespace zwindowscore
                     || Global.Settings.IgnoredProcessNames.Contains(title)) 
                     return true;
 
-                var isVisible = Win32Helper.IsWindowVisible(hWnd);
-                var isIconic = Win32Helper.IsIconic(hWnd);
+                Debug.WriteLine("----");
+                Debug.WriteLine(title);
 
-                if(!isVisible && !isIconic)
+                if (!Win32Helper.IsAltTabWindow(hWnd))
                 {
                     return true;
                 }
 
-                collection.Add(new DesktopWindow { Handle = hWnd, Title = title, IsVisible = isVisible, IsIconic = isIconic });
+                //if (currentVirtualDesktopOnly && 
+                //    !IsHwndOnCurrentDesktop(hWnd))
+                //{
+                //    return true;
+                //}
+
+                //var isVisible = Win32Helper.IsWindowVisible(hWnd);
+                var isIconic = Win32Helper.IsIconic(hWnd);
+
+                //if(!isVisible && !isIconic)
+                //{
+                //    return true;
+                //}
+
+                collection.Add(new DesktopWindow { Handle = hWnd, Title = title, IsVisible = true, IsIconic = isIconic });
 
                 return true;
             };
@@ -462,12 +475,18 @@ namespace zwindowscore
         {
             try
             {
-                return WindowsDesktop.VirtualDesktop.Current.Id == VirtualDesktop.FromHwnd(hwnd).Id;
+                return WindowsDesktop.VirtualDesktop.Current.Id == VirtualDesktop.FromHwnd(hwnd)?.Id;
             }
             catch
             {
                 return false;
             }
+        }
+
+        public static WindowTabButton FindTabButtonWithHwnd(IntPtr hwnd)
+        {
+            return Global.TabButtonWindows.ContainsKey(hwnd)
+                ? Global.TabButtonWindows[hwnd] : null;
         }
     }
 }

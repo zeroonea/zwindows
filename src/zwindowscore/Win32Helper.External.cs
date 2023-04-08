@@ -24,6 +24,7 @@ namespace zwindowscore
         public const int WM_RBUTTONDOWN = 0x0204;
         public const int WM_RBUTTONUP = 0x0205;
         public const int WM_MOUSEACTIVATE = 0x0021;
+        public const int WM_CLOSE = 0x0010;
 
         public const int MA_NOACTIVATE = 0x0003;
         

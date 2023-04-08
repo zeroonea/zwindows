@@ -6,6 +6,7 @@ using zwindowscore.Utils.UI;
 using static zwindowscore.Monitor;
 using zwindowscore.Options;
 using System.Diagnostics;
+using System.Threading;
 
 namespace zwindowscore
 {
@@ -34,28 +35,26 @@ namespace zwindowscore
         static void WinEventProc(IntPtr hWinEventHook, EventType eventType,
             IntPtr hwnd, WinEventObjectId idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if(PauseWinEventHook) return;
-
-            if (idObject == WinEventObjectId.OBJID_CURSOR || idObject == WinEventObjectId.OBJID_CARET)
+            if (PauseWinEventHook 
+                || idObject == WinEventObjectId.OBJID_CURSOR 
+                || idObject == WinEventObjectId.OBJID_CARET
+                || hwnd == IntPtr.Zero
+                || idObject != WinEventObjectId.OBJID_SELF 
+                || idChild != 0)
             {
                 return;
             }
-            if (hwnd == IntPtr.Zero)
-            {
-                return;
-            }
-
-            if (idObject != WinEventObjectId.OBJID_SELF || idChild != 0)
-            {
-                return;
-            }
+            var tab = Global.FindTabButtonWithHwnd(hwnd);
+            //Debug.WriteLine("foreground {2} {0:x8} {1}", hwnd.ToInt32(), GetProcessFileName(hwnd), eventType);
             switch (eventType)
             {
+                //case EventType.WM_WINDOWPOSCHANGING:
+                //    Debug.WriteLine("foreground {0:x8} {1}", hwnd.ToInt32(), GetProcessFileName(hwnd));
+                //    break;
                 case EventType.EVENT_OBJECT_DESTROY:
-                    if (Global.TabButtonWindows.ContainsKey(hwnd))
+                    if (tab != null)
                     {
                         MethodInvoker action = delegate {
-                            var tab = Global.TabButtonWindows[hwnd];
                             if(tab.Parent != null)
                             { 
                                 tab.Parent.RemoveTabWindowButton(tab);
@@ -67,10 +66,8 @@ namespace zwindowscore
                     break;
                 
                 case EventType.EVENT_OBJECT_NAMECHANGE:
-                    
-                    if (Global.TabButtonWindows.ContainsKey(hwnd))
+                    if (tab != null)
                     {
-                        var tab = Global.TabButtonWindows[hwnd];
                         if (tab.TitleEvent)
                         {
                             tab.Text = GetWindowTitle(hwnd);
@@ -79,7 +76,7 @@ namespace zwindowscore
                     break;
                 
                 case EventType.EVENT_SYSTEM_FOREGROUND:
-                    Debug.WriteLine("foreground {0:x8} {1}", hwnd.ToInt32(), GetProcessFileName(hwnd));
+                    //Debug.WriteLine("foreground {0:x8} {1}", hwnd.ToInt32(), GetProcessFileName(hwnd));
                     if(IsTopLevelWindows(hwnd))
                     {
                         foreground = hwnd;
@@ -105,25 +102,23 @@ namespace zwindowscore
                         else
                         {
                             // BringWindowsToFront(hwnd);
-                            if (Global.TabButtonWindows.ContainsKey(hwnd))
+                            if (tab != null && tab.Parent != null)
                             {
-                                var tab = Global.TabButtonWindows[hwnd];
-                                if(tab.Parent != null)
-                                { 
-                                    tab.Parent.SelectedWindowTabButton = tab;
-                                }
+                                tab.Parent.SelectedWindowTabButton = tab;
                             }
                         }
                     }
                     break;
                 case EventType.EVENT_OBJECT_LOCATIONCHANGE:
-                    WindowPlacement wp = new WindowPlacement();
-                    GetWindowPlacement(hwnd, ref wp);
-                    if (CmdShow.SW_MAXIMIZE == wp.showCmd)
-                    {
-                        DragWindowState = 0;
-                        SnapWindow(hwnd);
-                        break;
+                    if(DragWindowState == 0)
+                    { 
+                        WindowPlacement wp = new WindowPlacement();
+                        GetWindowPlacement(hwnd, ref wp);
+                        if (CmdShow.SW_MAXIMIZE == wp.showCmd)
+                        {
+                            SnapWindow(hwnd);
+                            break;
+                        }
                     }
                     else if(!Global.Settings.DisableDragWindowOverlay)
                     { 
@@ -131,36 +126,37 @@ namespace zwindowscore
 
                         if(DragWindowState == 1)
                         {
-                            Debug.WriteLine("Check drag or reisze...");
+                            //Debug.WriteLine("Check drag or reisze...");
 
                             var tmp = new Rect();
                             GetClientRect(hwnd, ref tmp);
                             if(tmp.ToString() == DragWindowRect.ToString())
                             {
                                 DragWindowState = 2; //dragging
-                                Debug.WriteLine("it is dragging");
+                                //Debug.WriteLine("it is dragging");
                             }
                             else
                             {
                                 DragWindowState = 3; //resizing
-                                Debug.WriteLine("it is resizing");
+                                //Debug.WriteLine("it is resizing");
                             }
                         }
                         else if(DragWindowState == 2)
                         {
-                            Debug.WriteLine("dragging");
+                            //Debug.WriteLine("dragging");
                             Point lpPoint;
                             GetCursorPos(out lpPoint);
                             var layout = Global.GetMonitorLayout(null, lpPoint, 
                                 null, Global.CurrentDesktopName);
-                            if(layout != null)
+                            if (layout != null)
                             {
                                 DragWindowLayout = layout;
-                                MethodInvoker action = delegate {
+                                MethodInvoker action = delegate
+                                {
                                     //Debug.WriteLine("set layout highlight");
                                     //PauseWinEventHook = true;
-                                    LayoutOverlay.ShowOverlay(hwnd, 
-                                        layout._monitor.X + layout.Left, 
+                                    LayoutOverlay.ShowOverlay(hwnd,
+                                        layout._monitor.X + layout.Left,
                                         layout._monitor.Y + layout.Top,
                                         layout.CWidth,
                                         layout.CHeight);
@@ -172,30 +168,31 @@ namespace zwindowscore
                         }
                     }
                     break;
-                /*case EventType.EVENT_SYSTEM_MINIMIZESTART:
+                case EventType.EVENT_SYSTEM_MINIMIZESTART:
                     if (Global.IgnoredMinimizeEvents.Contains(hwnd))
                     {
                         Global.IgnoredMinimizeEvents.Remove(hwnd);
                         break;
                     }
-                    if(Global.Settings.DisabledMinimize)
+                    if (Global.Settings.DisabledMinimize)
                     {
-                        if(hwnd == foreground){
-                            Debug.WriteLine("{0:x8} is restoring", hwnd.ToInt32());
+                        if (hwnd == foreground)
+                        {
+                            //Debug.WriteLine("{0:x8} is restoring", hwnd.ToInt32());
                             ShowWindow(hwnd, CmdShow.SW_RESTORE);
                         }
                     }
                     break;
-                case EventType.EVENT_SYSTEM_MINIMIZEEND:
-                    Debug.WriteLine("{0:x8} is minimized", hwnd.ToInt32());
-                    break;*/
+                //case EventType.EVENT_SYSTEM_MINIMIZEEND:
+                //    Debug.WriteLine("{0:x8} is minimized", hwnd.ToInt32());
+                //    break;
 
                 case EventType.EVENT_SYSTEM_MOVESIZESTART:
                     if(!Global.Settings.DisableDragWindowOverlay)
                     {
                         if(DragWindowState == 0)
                         {
-                            Debug.WriteLine("Begin Drag");
+                            //Debug.WriteLine("Begin Drag");
                             DragWindowHwnd = hwnd;
                             DragWindowState = 1;
                             DragWindowRect = new Rect();
@@ -211,17 +208,26 @@ namespace zwindowscore
                         {
                             if(DragWindowHwnd == hwnd && DragWindowLayout != null)
                             {
-                                if (!Global.Settings.DisableAutoSnapWindowAfterDrag)
+                                MethodInvoker action = delegate
                                 {
-                                    SnapWindowToLayout(hwnd, 
-                                        DragWindowLayout._monitor, DragWindowLayout);
-                                }
-                                MethodInvoker action = delegate {
                                     LayoutOverlay.ClearOverlay();
+
+                                    // The multi tabs app like chrome, edge, firefox auto snap when we move single chrome tab
+                                    // to another, we need to wait a little to the auto snap done
+                                    // when it done, the current windows (single chrome tab that we moving) will be seen as
+                                    // not root owner windows > clean up tab button
+                                    Thread.Sleep(Global.Settings.MultiTabsBugThreadSleep);
+                                    
                                     if (!Global.Settings.DisableAutoSnapWindowAfterDrag)
                                     {
-                                        CreateOrUpdateTabButton(hwnd, 
-                                            DragWindowLayout._monitor, DragWindowLayout);
+                                        //Debug.WriteLine(hwnd);
+                                        if (SnapWindowToLayout(hwnd,
+                                            DragWindowLayout._monitor, DragWindowLayout, true))
+                                        {
+                                            //Debug.WriteLine("true " + hwnd);
+                                            CreateOrUpdateTabButton(hwnd,
+                                                DragWindowLayout._monitor, DragWindowLayout);
+                                        }
                                     }
                                 };
                                 Global.Main.BeginInvoke(action);

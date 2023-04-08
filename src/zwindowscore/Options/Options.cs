@@ -14,11 +14,11 @@ namespace zwindowscore.Options
         public string WindowDragOverlayColor = "#2192FF";
         
         public bool DisableDragWindowOverlay { get; set; } = false;
-        public bool DisableAutoSnapWindowAfterDrag { get; set; } = true;
+        public bool DisableAutoSnapWindowAfterDrag { get; set; } = false;
 
         public bool DisabledMinimize { get; set; } = true;
         public bool DefaultWindowsTabNotificationOn { get; set; } = true;
-        public int DeltaForAutoDetectWindowLayout { get ;set; } = 100;
+        public int DeltaForAutoDetectWindowLayout { get ;set; } = 200;
 
         public int CenterTaskBarDelay { get ;set; } = 5000;
 
@@ -28,15 +28,37 @@ namespace zwindowscore.Options
         public int TabButtonWidth { get; set; } = 100;
         public int TabButtonHeight { get; set; } = 20;
 
-        public bool LockTabButtonBetweenDesktops { get; set; } = true;
+        public bool LockTabButtonBetweenDesktops { get; set; } = false;
+        public bool NotifyDesktopName { get; set; } = false;
 
-        public List<string> IgnoredProcessNames = new List<string>();
+        public bool HideTaskbars { get; set; } = true;
+
+        public List<string> IgnoredProcessNames = new List<string>()
+        {
+            //"Windows Input Experience",
+            //"Hidden Window",
+            //"Loading...",
+            //"Setup",
+            //"Program Manager",
+
+            //"XWin Msg Window",
+            //"xwinclip",
+            
+            //"NVIDIA GeForce Overlay DT",
+            //"NVIDIA GeForce Overlay"
+        };
+
         public List<string> NoTabBarDesktopNames = new List<string>();
 
         public Dictionary<string, MonitorDevice> MonitorsLayouts { get; set; } = new Dictionary<string, MonitorDevice>();
         public List<WindowEventListener> WindowEventListeners { get; set; } = new List<WindowEventListener>();
 
-        public List<string> NoFullSnapWhenAutoSnapProcesses = new List<string>();
+        public List<string> NoFullSnapWhenAutoSnapProcesses = new List<string>()
+        {
+            //"notepad"
+        };
+
+        public int MultiTabsBugThreadSleep { get; set; } = 100;
     }
 
 
@@ -102,6 +124,7 @@ namespace zwindowscore.Options
             }
         }
 
+        // Useable size (include or exclude task bar size)
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -208,7 +231,7 @@ namespace zwindowscore.Options
             }
         }
 
-        public int[] Offset { get; set; } = new int[4] {0, 0, 0, 0}; // Top, Right, Bottom, Left
+        public int[] Offset { get; set; } = new int[4] {20, 20, 20, 20}; // Top, Right, Bottom, Left
         public int MonitorRatio { get; set; } = 0; // 0: for all, 1: for portrait only, 2: for landscape only
     }
 

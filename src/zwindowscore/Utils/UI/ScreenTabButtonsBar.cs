@@ -19,13 +19,14 @@ namespace zwindowscore.Utils
         private MoveableScreenElement _bar;
         private FlowLayoutPanel _pnlWindows;
         private FlowLayoutPanel _wrapper;
-
+        private bool _isSnapped = true;
 
         private ContextMenuStrip _ctxTabBtnMenu;
         private ToolStripMenuItem _ctxTabBtnMenuDesktopItem;
         private ToolStripMenuItem _ctxTabBtnMenuSnapItem;
         private ToolStripMenuItem _ctxTabBtnMenuTopmostItem;
         private ToolStripMenuItem _ctxTabBtnMenuNotificationItem;
+        private ToolStripMenuItem _ctxTabBtnMenuCloseItem;
 
         private ContextMenuStrip _ctxMenu;
         private ToolStripMenuItem _ctxMenuSnapItem;
@@ -96,18 +97,21 @@ namespace zwindowscore.Utils
             _ctxTabBtnMenuSnapItem = new ToolStripMenuItem("Snap");
             _ctxTabBtnMenuTopmostItem = new ToolStripMenuItem("Topmost");
             _ctxTabBtnMenuNotificationItem = new ToolStripMenuItem("Notification");
+            _ctxTabBtnMenuCloseItem = new ToolStripMenuItem("Close");
+            //_ctxTabBtnMenuCloseItem.Image = 
 
             _ctxTabBtnMenu.Items.Add(_ctxTabBtnMenuSnapItem);
             _ctxTabBtnMenu.Items.Add(_ctxTabBtnMenuTopmostItem);
             _ctxTabBtnMenu.Items.Add(_ctxTabBtnMenuNotificationItem);
             _ctxTabBtnMenu.Items.Add(_ctxTabBtnMenuDesktopItem);
+            _ctxTabBtnMenu.Items.Add(_ctxTabBtnMenuCloseItem);
 
             // --------------------------
             _ctxMenu = new ContextMenuStrip();
             _ctxMenu.Opening += _ctxMenu_Opening;
             _ctxMenu.ItemClicked += _ctxMenu_ItemClicked;
 
-            _ctxMenuSnapItem = new ToolStripMenuItem("Snap");
+            _ctxMenuSnapItem = new ToolStripMenuItem("Snap Bar");
             _ctxMenuTopmostItem = new ToolStripMenuItem("Topmost");
             _ctxMenuTopmostItem.Checked = true;
 
@@ -179,15 +183,12 @@ namespace zwindowscore.Utils
             }
             else if (e.ClickedItem == _ctxTabBtnMenuTopmostItem)
             {
-                if(!tabBtn.IsWindowTopMost)
-                {
-                    Win32Helper.SetWindowPos(tabBtn.Hwnd, Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnly);
-                }
-                else
-                {
-                    Win32Helper.SetWindowPos(tabBtn.Hwnd, Win32Helper.HWND_NOTOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnly);
-                }
+                tabBtn.Topmost(!tabBtn.IsWindowTopMost);
                 _ctxTabBtnMenuTopmostItem.Checked = !tabBtn.IsWindowTopMost;
+            }
+            else if (e.ClickedItem == _ctxTabBtnMenuCloseItem)
+            {
+                Win32Helper.CloseWindow(tabBtn.Hwnd);
             }
         }
 
@@ -210,6 +211,7 @@ namespace zwindowscore.Utils
         {
             if (e.ClickedItem == _ctxMenuSnapItem)
             {
+                _isSnapped = true;
                 UpdateLocation();
             }
             else if (e.ClickedItem == _ctxMenuTopmostItem)
@@ -242,9 +244,6 @@ namespace zwindowscore.Utils
 
         public WindowTabButton AddTabWindowButton(WindowTabButton tbtn)
         {
-            var vd = Win32Helper.GetDesktop(tbtn.Hwnd);
-            if(vd == null) return null;
-
             WindowButtons.Add(tbtn);
             tbtn.Parent = this;
             tbtn.Panel.ContextMenuStrip = _ctxTabBtnMenu;
@@ -252,9 +251,16 @@ namespace zwindowscore.Utils
             _pnlWindows.Controls.Add(tbtn.Panel);
             tbtn.Panel.ResumeLayout(false);
             _pnlWindows.ResumeLayout(false);
-            UpdateLocation();
-            
-            tbtn.Desktop = Win32Helper.GetDesktopIndex(vd);
+            if(_isSnapped)
+            { 
+                UpdateLocation();
+            }
+
+            var vd = Win32Helper.GetDesktop(tbtn.Hwnd);
+            if(vd != null)
+            {
+                tbtn.Desktop = Win32Helper.GetDesktopIndex(vd);
+            }
             return tbtn;
         }
 
@@ -267,7 +273,10 @@ namespace zwindowscore.Utils
             _pnlWindows.ResumeLayout(false);
             tbtn.Parent = null;
             Console.WriteLine($"Remove tab button: {tbtn.Text}");
-            UpdateLocation();
+            if(_isSnapped)
+            { 
+                UpdateLocation();
+            }
         }
 
         public void UpdateLocation()

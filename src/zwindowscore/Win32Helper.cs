@@ -1,19 +1,18 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using zwindowscore.Enum;
-using zwindowscore.Struct;
-using System.Linq;
-using System.Text;
-using zwindowscore.Utils;
-using System.Diagnostics;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Newtonsoft.Json;
-using zwindowscore.Options;
 using WindowsDesktop;
-using System.Windows.Input;
+using zwindowscore.Enum;
+using zwindowscore.Options;
+using zwindowscore.Struct;
+using zwindowscore.Utils;
 
 namespace zwindowscore
 {
@@ -27,7 +26,7 @@ namespace zwindowscore
             {
                 desktopName = (string)Microsoft.Win32.Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VirtualDesktops\\Desktops\\{" + desktopId.ToString() + "}", "Name", null);
             }
-            catch  { }
+            catch { }
             if (string.IsNullOrEmpty(desktopName))
             {
                 return $"Unnamed-{index}";
@@ -38,7 +37,7 @@ namespace zwindowscore
         public static string GetDesktopName(IntPtr hwnd)
         {
             var vd = WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);
-            if(vd != null)
+            if (vd != null)
             {
                 return GetDesktopName(vd.Id);
             }
@@ -52,17 +51,17 @@ namespace zwindowscore
         }
 
         public static int GetDesktopIndex(VirtualDesktop vd)
-	    {
-			var desktops = WindowsDesktop.VirtualDesktop.GetDesktops();
-			return Array.IndexOf(desktops, vd);
-	    }
+        {
+            var desktops = WindowsDesktop.VirtualDesktop.GetDesktops();
+            return Array.IndexOf(desktops, vd);
+        }
 
         public static void SetDesktop(IntPtr hwnd)
         {
             var vd = WindowsDesktop.VirtualDesktop.FromHwnd(hwnd);
-            if(vd != null)
+            if (vd != null)
             {
-                if(!currentDesktopId.HasValue || vd.Id != currentDesktopId.Value)
+                if (!currentDesktopId.HasValue || vd.Id != currentDesktopId.Value)
                 {
                     currentDesktopId = vd.Id;
                     Console.WriteLine("Desktop {0} #{1}", Global.CurrentDesktopName, currentDesktopId);
@@ -80,14 +79,14 @@ namespace zwindowscore
             SetDesktop(hwnd);
 
             var monitorInfo = Monitor.GetMonitorFromWindow(hwnd, Monitor.MONITOR_DEFAULTTONEAREST);
-            if(monitorInfo != null)
+            if (monitorInfo != null)
             {
-                if(currentMonitor == null || currentMonitor.DeviceName != monitorInfo.DeviceName)
+                if (currentMonitor == null || currentMonitor.DeviceName != monitorInfo.DeviceName)
                 {
-                    Console.WriteLine("Monitor {0}: {1}x{2}, {3}x{4}", 
-                        monitorInfo?.DeviceName, 
-                        monitorInfo?.GetRealWidth(), 
-                        monitorInfo?.GetRealHeight(), 
+                    Console.WriteLine("Monitor {0}: {1}x{2}, {3}x{4}",
+                        monitorInfo?.DeviceName,
+                        monitorInfo?.GetRealWidth(),
+                        monitorInfo?.GetRealHeight(),
                         monitorInfo?.GetWidth(),
                         monitorInfo?.GetHeight());
 
@@ -115,9 +114,9 @@ namespace zwindowscore
                 foreach (var w in g.Windows)
                 {
                     ShowWindow(w.Hwnd, CmdShow.SW_RESTORE);
-                    SetWindowPos(w.Hwnd, HWND_TOPMOST, 0, 0, 0, 0, 
+                    SetWindowPos(w.Hwnd, HWND_TOPMOST, 0, 0, 0, 0,
                         WindowPosFlags.IgnoreResizeAndMove);
-                    SetWindowPos(w.Hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, 
+                    SetWindowPos(w.Hwnd, HWND_NOTOPMOST, 0, 0, 0, 0,
                         WindowPosFlags.IgnoreResizeAndMove);
                 }
             }
@@ -128,14 +127,14 @@ namespace zwindowscore
         /// Create TabButton (if not exits). Add/Move TabButton into TabBar
         /// TabBar Id = vdn + layout x + layout y;
         /// </summary>
-        public static string CreateOrUpdateTabButton(IntPtr hwnd, MonitorDevice monitor, 
+        public static string CreateOrUpdateTabButton(IntPtr hwnd, MonitorDevice monitor,
             MonitorLayout layout)
         {
-            if(!layout.TabsBar.Enable) return null;
+            if (!layout.TabsBar.Enable) return null;
             var title = Win32Helper.GetWindowTitle(hwnd);
-            if(string.IsNullOrEmpty(title)) return null;
+            if (string.IsNullOrEmpty(title)) return null;
 
-            var tbkey = (monitor.X + layout.Left).ToString() 
+            var tbkey = (monitor.X + layout.Left).ToString()
                 + ":" + (monitor.Y + layout.Top).ToString()
                 + ":" + layout.Width.ToString();
 
@@ -157,7 +156,7 @@ namespace zwindowscore
                     },
                     Visible = true
                 };
-                if(Global.Settings.NoTabBarDesktopNames != null 
+                if (Global.Settings.NoTabBarDesktopNames != null
                     && Global.Settings.NoTabBarDesktopNames.Contains(Global.CurrentDesktopName))
                 {
                     Global.TabButtonsBars[tbkey].Bar.Hide();
@@ -168,18 +167,20 @@ namespace zwindowscore
 
             Console.WriteLine($"bar maxwidth: {bar.MaxWidth}");
 
-            WindowTabButton tab = Global.TabButtonWindows.ContainsKey(hwnd) 
-                ? Global.TabButtonWindows[hwnd] : null;
-            if(tab != null)
+            WindowTabButton tab = Global.FindTabButtonWithHwnd(hwnd);
+            // windows already has a tab button
+            if (tab != null)
             {
-                if(tab.Parent == bar)
+                // tab button already on the bar of layout
+                if (tab.Parent == bar)
                 {
                     return null;
                 }
                 else
                 {
-                    if(tab.Parent != null)
-                    { 
+                    // move tab button to another bar of another layout
+                    if (tab.Parent != null)
+                    {
                         tab.Parent.RemoveTabWindowButton(hwnd);
                     }
                     bar.AddTabWindowButton(tab);
@@ -187,12 +188,13 @@ namespace zwindowscore
             }
             else
             {
+                // new tab button
                 tab = bar.AddTabWindowButton(hwnd, title);
-                if(tab == null)
+                if (tab == null)
                 {
                     if (Global.TabButtonsBars[tbkey].WindowButtons.Count == 0)
                     {
-                        
+
                         Global.TabButtonsBars[tbkey].Dispose();
                         Global.TabButtonsBars.Remove(tbkey);
                     }
@@ -204,11 +206,37 @@ namespace zwindowscore
             return tbkey;
         }
 
-        public static void SnapWindowToLayout(IntPtr hwnd, MonitorDevice monitor, MonitorLayout layout)
+        public static bool SnapWindowToLayout(IntPtr hwnd, MonitorDevice monitor, MonitorLayout layout, 
+            bool isAuto = false)
         {
+
+            if (!IsAltTabWindow(hwnd))
+            {
+                return false;
+            }
+
             PauseWinEventHook = true;
 
-            if(monitor == null)
+            if (isAuto && Global.Settings.NoFullSnapWhenAutoSnapProcesses != null
+                && Global.Settings.NoFullSnapWhenAutoSnapProcesses.Count > 0)
+            {
+                var processName = Win32Helper.GetProcessFileName(hwnd);
+                if (string.IsNullOrEmpty(processName))
+                {
+                    PauseWinEventHook = false;
+                    return false;
+                }
+                foreach (var name in Global.Settings.NoFullSnapWhenAutoSnapProcesses)
+                {
+                    if (processName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        PauseWinEventHook = false;
+                        return false;
+                    }
+                }
+            }
+            
+            if (monitor == null)
             {
                 SetDesktopAndMonitor(hwnd);
                 monitor = Global.CurrentMonitor;
@@ -216,47 +244,34 @@ namespace zwindowscore
             ShowWindow(hwnd, CmdShow.SW_RESTORE);
             var border_thickness = GetBorderSize(hwnd);
 
-            if(Global.Settings.NoFullSnapWhenAutoSnapProcesses != null 
-                && Global.Settings.NoFullSnapWhenAutoSnapProcesses.Count > 0)
-            {
-                var processName = Win32Helper.GetProcessFileName(hwnd);
-                foreach(var name in Global.Settings.NoFullSnapWhenAutoSnapProcesses)
-                {
-                    if(processName.Contains(name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        PauseWinEventHook = false;
-                        return;
-                    }
-                }
-            }
-
             // TODO
             var mdx = monitor.X > 0 ? 1 : 0;
             var mdy = monitor.Y > 0 ? 1 : 0;
             mdx = 0;
             mdy = 0;
 
-            Console.WriteLine("pos: {0} {1} {2} {3}", 
-                monitor.X + mdx + layout.Left - border_thickness + layout.LeftOffset, 
-                monitor.Y + mdy + layout.Top + layout.TopOffset, 
-                -mdx * 1 + layout.CWidth + border_thickness * 2 + layout.RightOffset - layout.LeftOffset, 
-                -mdy * 1 + layout.CHeight + border_thickness + layout.BottomOffset - layout.TopOffset);
+            Console.WriteLine("pos: {0} {1} {2} {3}",
+                monitor.X + mdx + layout.Left - border_thickness + layout.LeftOffset,
+                monitor.Y + mdy + layout.Top + layout.TopOffset,
+                -mdx * 1 + layout.CWidth + border_thickness * 2 - (layout.RightOffset + layout.LeftOffset),
+                -mdy * 1 + layout.CHeight + border_thickness - (layout.BottomOffset + layout.TopOffset));
 
             SetWindowPos(hwnd, IntPtr.Zero,
                 monitor.X + mdx + layout.Left - border_thickness + layout.LeftOffset,
                 monitor.Y + mdy + layout.Top + layout.TopOffset,
-                -mdx * 1 + layout.CWidth + border_thickness * 2 + layout.RightOffset - layout.LeftOffset,
-                -mdy * 1 + layout.CHeight + border_thickness + layout.BottomOffset - layout.TopOffset,
+                -mdx * 1 + layout.CWidth + border_thickness * 2 - (layout.RightOffset + layout.LeftOffset),
+                -mdy * 1 + layout.CHeight + border_thickness - (layout.BottomOffset + layout.TopOffset),
                 WindowPosFlags.ShowWindow);
 
             PauseWinEventHook = false;
+            return true;
         }
 
         public static int GetBorderSize(IntPtr hwnd)
         {
             Rect rcClient = new Rect();
             Rect rcWind = new Rect();
-            GetClientRect(hwnd, ref rcClient); 
+            GetClientRect(hwnd, ref rcClient);
             GetWindowRect(hwnd, ref rcWind);
             Console.WriteLine("Rect of {0:x8}", hwnd.ToInt32());
             Console.WriteLine(rcClient);
@@ -274,7 +289,7 @@ namespace zwindowscore
         public static void RefreshTabBars()
         {
             Utils.Timer.StartTimer();
-            foreach(var b in Global.TabButtonsBars.Values)
+            foreach (var b in Global.TabButtonsBars.Values)
             {
                 b.Dispose();
             }
@@ -284,7 +299,7 @@ namespace zwindowscore
 
             var windows = Global.GetDesktopWindows();
             //var vdn = Global.VD.GetDesktopName(Global.VD.GetCurrentDesktopId());
-            foreach(var window in windows)
+            foreach (var window in windows)
             {
                 Console.WriteLine("------");
                 Console.WriteLine("{0:x8} {1} v{2} c{3}", window.Handle.ToInt32(), window.Title,
@@ -292,7 +307,7 @@ namespace zwindowscore
 
                 Rect rcClient = new Rect();
                 GetClientRect(window.Handle, ref rcClient);
-                if(rcClient.Left == 0 && rcClient.Right == 0 
+                if (rcClient.Left == 0 && rcClient.Right == 0
                     && rcClient.Top == 0 && rcClient.Bottom == 0)
                 {
                     continue;
@@ -314,31 +329,32 @@ namespace zwindowscore
                 var h = rcWind.Bottom - rcWind.Top;
                 var delta = Global.Settings.DeltaForAutoDetectWindowLayout;
 
-                Console.WriteLine($"x: {x}, y: {y}, w: {w}, h: {h}");
+                //Console.WriteLine($"x: {x}, y: {y}, w: {w}, h: {h}");
 
                 var availableMonitorIds = Global.MonitorDevices.Select(p => p.Id).ToList();
                 var availableMonitors = Global.Settings.MonitorsLayouts.Values
                     .Where(p => availableMonitorIds.Contains(p.Id))
                     .ToList();
 
-                foreach(var monitor in availableMonitors)
+                foreach (var monitor in availableMonitors)
                 {
                     var mx = x - monitor.X;
                     var my = y - monitor.Y;
 
-                    Console.WriteLine($"{monitor.Name}, {mx}, {my}");
+                    //Console.WriteLine($"{monitor.Name}, {mx}, {my}");
 
-                    var layout = monitor.Layouts.Where(p => 
-                        p.TabsBar.Enable 
+                    var layout = monitor.Layouts.Where(p =>
+                        p.TabsBar.Enable
                         //&& p.DesktopName == vdn
                         && (mx >= p.Left - delta && mx <= p.Left + delta)
                         && (my >= p.Top - delta && my <= p.Top + delta)
                         && (w >= p.CWidth - delta && w <= p.CWidth + delta)
                         && (h >= p.CHeight - delta && h <= p.CHeight + delta)
                     ).FirstOrDefault();
-                    if(layout != null)
+                    if (layout != null)
                     {
-                        Console.WriteLine($"layout#{monitor.Layouts.IndexOf(layout)}, {layout.Left}, {layout.Top}, {layout.CWidth}, {layout.CHeight}");
+                        SnapWindowToLayout(window.Handle, monitor, layout);
+                        //Console.WriteLine($"layout#{monitor.Layouts.IndexOf(layout)}, {layout.Left}, {layout.Top}, {layout.CWidth}, {layout.CHeight}");
                         CreateOrUpdateTabButton(window.Handle, monitor, layout);
                     }
                 }
@@ -355,11 +371,11 @@ namespace zwindowscore
             var vdn = Global.CurrentDesktopName;
             var ds = new DesktopState { DesktopName = vdn, WindowStates = new List<WindowState>() };
 
-            foreach(var window in windows)
+            foreach (var window in windows)
             {
                 Rect rcClient = new Rect();
                 GetClientRect(window.Handle, ref rcClient);
-                if(rcClient.Left == 0 && rcClient.Right == 0 
+                if (rcClient.Left == 0 && rcClient.Right == 0
                     && rcClient.Top == 0 && rcClient.Bottom == 0)
                 {
                     continue;
@@ -367,7 +383,7 @@ namespace zwindowscore
                 Rect rcWind = new Rect();
                 GetWindowRect(window.Handle, ref rcWind);
 
-                if(rcWind.Left <= -10000 || rcWind.Top <= -10000)
+                if (rcWind.Left <= -10000 || rcWind.Top <= -10000)
                 {
                     continue;
                 }
@@ -393,35 +409,35 @@ namespace zwindowscore
                 ds.WindowStates.Add(ws);
             }
             Global.DesktopStates[vdn] = ds;
-            File.WriteAllText(Global.GetDesktopsStatesFilePath(), 
+            File.WriteAllText(Global.GetDesktopsStatesFilePath(),
                 JsonConvert.SerializeObject(Global.DesktopStates, Formatting.Indented));
             Utils.Timer.StopTimer("SaveWindowsStatesOfCurrentDesktop");
         }
-        
+
         public static void LoadDesktop(string vdn = null)
         {
-            if(vdn == null)
+            if (vdn == null)
             {
                 vdn = Global.CurrentDesktopName;
             }
-            if(Global.DesktopStates.Keys.Count == 0)
+            if (Global.DesktopStates.Keys.Count == 0)
             {
                 Global.DesktopStates = Global.LoadDesktopsStatesFromFile();
             }
             if (Global.DesktopStates.ContainsKey(vdn))
             {
                 var ds = Global.DesktopStates[vdn];
-                foreach(var ws in ds.WindowStates)
+                foreach (var ws in ds.WindowStates)
                 {
                     if (IsIconic(ws.Hwnd))
                     {
                         ShowWindow(ws.Hwnd, CmdShow.SW_RESTORE);
                     }
-                    SetWindowPos(ws.Hwnd, IntPtr.Zero, 
-                        ws.X, 
-                        ws.Y, 
-                        ws.Width, 
-                        ws.Height, 
+                    SetWindowPos(ws.Hwnd, IntPtr.Zero,
+                        ws.X,
+                        ws.Y,
+                        ws.Width,
+                        ws.Height,
                         WindowPosFlags.ShowWindow);
                 }
             }
@@ -467,24 +483,27 @@ namespace zwindowscore
                 else
                     return GetClassLongPtr64(hWnd, nIndex);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return IntPtr.Zero;
             }
         }
 
-        public static Process GetModernAppProcessPath(IntPtr hwnd) {
+        public static Process GetModernAppProcessPath(IntPtr hwnd)
+        {
             uint pid = 0;
-            Win32Helper.GetWindowThreadProcessId(hwnd, out pid);            
+            Win32Helper.GetWindowThreadProcessId(hwnd, out pid);
             // now this is a bit tricky. Modern apps are hosted inside ApplicationFrameHost process, so we need to find
             // child window which does NOT belong to this process. This should be the process we need
             var children = Win32Helper.GetChildWindows(hwnd);
-            foreach (var childHwnd in children) {
+            foreach (var childHwnd in children)
+            {
                 uint childPid = 0;
                 Win32Helper.GetWindowThreadProcessId(childHwnd, out childPid);
-                if (childPid != pid) {
+                if (childPid != pid)
+                {
                     // here we are
-                    return Process.GetProcessById((int) childPid);
+                    return Process.GetProcessById((int)childPid);
                 }
             }
             return null;
@@ -494,7 +513,7 @@ namespace zwindowscore
         public static string GetProcessFileName(IntPtr hwnd)
         {
             var p = GetProcess(hwnd);
-            if(p != null)
+            if (p != null)
             {
                 return p.ProcessName + "|" + p.MainModule.FileName;
             }
@@ -516,7 +535,7 @@ namespace zwindowscore
             }
             catch
             {
-                
+
             }
             return null;
         }
@@ -524,25 +543,25 @@ namespace zwindowscore
         public static bool IsMatch(IntPtr hwnd, WindowFilterRule rule)
         {
             var p = GetProcess(hwnd);
-            if(rule.ExactProcessName != null && rule.ExactProcessName == p.ProcessName)
+            if (rule.ExactProcessName != null && rule.ExactProcessName == p.ProcessName)
             {
                 return true;
             }
-            if(rule.ExactExeFileName != null)
+            if (rule.ExactExeFileName != null)
             {
                 var exefilename = p.MainModule.FileName.Substring(p.MainModule.FileName.LastIndexOf('/'));
-                if(rule.ExactExeFileName == exefilename)
+                if (rule.ExactExeFileName == exefilename)
                 {
                     return true;
                 }
             }
-            if(rule.ExactTitle != null && p.MainWindowTitle == rule.ExactTitle)
+            if (rule.ExactTitle != null && p.MainWindowTitle == rule.ExactTitle)
             {
                 return true;
             }
-            if(rule.RegexTitle != null)
+            if (rule.RegexTitle != null)
             {
-                if(Regex.IsMatch(p.MainWindowTitle, rule.RegexTitle))
+                if (Regex.IsMatch(p.MainWindowTitle, rule.RegexTitle))
                 {
                     return true;
                 }
@@ -550,17 +569,22 @@ namespace zwindowscore
             return false;
         }
 
-        public static void EnableCloseButton(IntPtr hwnd, bool enabled) {
+        public static void EnableCloseButton(IntPtr hwnd, bool enabled)
+        {
             IntPtr hMenu;
             int n;
             hMenu = GetSystemMenu(hwnd, false);
-            if (hMenu != IntPtr.Zero) {
+            if (hMenu != IntPtr.Zero)
+            {
                 n = GetMenuItemCount(hMenu);
-                if (n > 0) {
-                    if (enabled) {
+                if (n > 0)
+                {
+                    if (enabled)
+                    {
                         EnableClose(hwnd);
                     }
-                    else {
+                    else
+                    {
                         DisableClose(hwnd);
                     }
                     SendMessage(hwnd, WM_NCACTIVATE, (IntPtr)1, (IntPtr)0);
@@ -570,11 +594,13 @@ namespace zwindowscore
             }
         }
 
-        private static void DisableClose(IntPtr hwnd) {
+        private static void DisableClose(IntPtr hwnd)
+        {
             IntPtr hMenu;
             int n;
             hMenu = GetSystemMenu(hwnd, false);
-            if (hMenu != IntPtr.Zero) {
+            if (hMenu != IntPtr.Zero)
+            {
                 MenuItemInfo mif = new MenuItemInfo();
                 mif.cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo));
                 mif.fMask = MIIM_ID | MIIM_STATE;
@@ -591,11 +617,13 @@ namespace zwindowscore
             }
         }
 
-        private static void EnableClose(IntPtr hwnd) {
+        private static void EnableClose(IntPtr hwnd)
+        {
             IntPtr hMenu;
             int n;
             hMenu = GetSystemMenu(hwnd, false);
-            if (hMenu != IntPtr.Zero) {
+            if (hMenu != IntPtr.Zero)
+            {
                 MenuItemInfo mif = new MenuItemInfo();
                 mif.cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo));
                 mif.fMask = MIIM_ID | MIIM_STATE;
@@ -618,10 +646,10 @@ namespace zwindowscore
 
             hParent = GetAncestor(hWnd, GetAncestorFlags.GetParent);
             if (hParent.ToInt64() == 0 || hParent == GetDesktopWindow())
-            { 
+            {
                 hParent = GetParent(hWnd);
                 if (hParent.ToInt64() == 0 || hParent == GetDesktopWindow())
-                { 
+                {
                     hParent = hWnd;
                 }
 
@@ -630,19 +658,24 @@ namespace zwindowscore
             return hParent;
         }
 
+        public static void CloseWindow(IntPtr hwnd)
+        {
+            SendMessage(hwnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
+
         public static bool IsTopLevelWindows(IntPtr hWnd)
         {
             IntPtr hParent;
 
             hParent = GetAncestor(hWnd, GetAncestorFlags.GetParent);
-            if(hParent == GetDesktopWindow())
+            if (hParent == GetDesktopWindow())
             {
                 return true;
             }
             else if (hParent.ToInt64() == 0)
-            { 
+            {
                 hParent = GetParent(hWnd);
-                if(hParent == GetDesktopWindow())
+                if (hParent == GetDesktopWindow())
                 {
                     return true;
                 }
@@ -658,30 +691,35 @@ namespace zwindowscore
 
         public static bool IsAltTabWindow(IntPtr hWnd)
         {
-            // The window must be visible
-            if (!IsWindowVisible(hWnd))
-                return false;
-
             // The window must be a root owner
             if (GetAncestor(hWnd, GetAncestorFlags.GetRootOwner) != hWnd)
+            {
+                Debug.WriteLine("not root owner");
                 return false;
+            }
 
             // The window must not be cloaked by the shell
             DwmGetWindowAttribute(hWnd, DwmWindowAttribute.Cloaked, out uint cloaked, sizeof(uint));
             if (cloaked == DWM_CLOAKED_SHELL)
+            {
+                Debug.WriteLine("cloaked shell");
                 return false;
+            }
 
             // The window must not have the extended style WS_EX_TOOLWINDOW
             int style = GetWindowLong(hWnd, GWL_EXSTYLE);
             if ((style & WS_EX_TOOLWINDOW) != 0)
+            {
+                Debug.WriteLine("have extended style WS_EX_TOOLWINDOW");
                 return false;
-    
+            }
+
             return true;
         }
 
         public static void SnapWindow(IntPtr hwnd)
         {
-            if(IsTopLevelWindows(hwnd))
+            if (IsTopLevelWindows(hwnd))
             {
                 PauseWinEventHook = true;
                 Utils.Timer.StartTimer("Start detect/move window to layout");
@@ -697,7 +735,8 @@ namespace zwindowscore
                     {
                         SnapWindowToLayout(hwnd, Global.CurrentMonitor, layout);
 
-                        MethodInvoker action = delegate {
+                        MethodInvoker action = delegate
+                        {
                             CreateOrUpdateTabButton(hwnd, Global.CurrentMonitor, layout);
                         };
                         Global.Main.BeginInvoke(action);

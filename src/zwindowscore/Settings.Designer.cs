@@ -41,6 +41,8 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.niSettings = new System.Windows.Forms.NotifyIcon(this.components);
             this.ctxmNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mniSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.mniRefreshTaskBars = new System.Windows.Forms.ToolStripMenuItem();
             this.mniSnapAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mniToggleTabBarAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,21 +61,6 @@
             this.mniExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabLayouts = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.lbLayouts = new System.Windows.Forms.ListBox();
-            this.lbMonitors = new System.Windows.Forms.ListBox();
-            this.lbVD = new System.Windows.Forms.ListBox();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.btnHideTaskbar = new System.Windows.Forms.Button();
-            this.btnClearViewLayouts = new System.Windows.Forms.Button();
-            this.btnShowHideSelectedLayout = new System.Windows.Forms.Button();
-            this.btnShowHideLayoutList = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
@@ -93,11 +80,6 @@
             this.ctxmNotifyIcon.SuspendLayout();
             this.tabLayouts.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel10.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -221,6 +203,8 @@
             // ctxmNotifyIcon
             // 
             this.ctxmNotifyIcon.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mniSettings,
+            this.toolStripSeparator5,
             this.mniRefreshTaskBars,
             this.mniSnapAll,
             this.mniToggleTabBarAlwaysOnTop,
@@ -238,7 +222,19 @@
             this.toolStripSeparator3,
             this.mniExit});
             this.ctxmNotifyIcon.Name = "ctxmNotifyIcon";
-            this.ctxmNotifyIcon.Size = new System.Drawing.Size(195, 314);
+            this.ctxmNotifyIcon.Size = new System.Drawing.Size(195, 320);
+            // 
+            // mniSettings
+            // 
+            this.mniSettings.Name = "mniSettings";
+            this.mniSettings.Size = new System.Drawing.Size(194, 22);
+            this.mniSettings.Text = "Settings";
+            this.mniSettings.Click += new System.EventHandler(this.mniSettings_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(191, 6);
             // 
             // mniRefreshTaskBars
             // 
@@ -351,7 +347,6 @@
             // tabLayouts
             // 
             this.tabLayouts.Controls.Add(this.tabPage1);
-            this.tabLayouts.Controls.Add(this.tabPage3);
             this.tabLayouts.Controls.Add(this.tabPage2);
             this.tabLayouts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabLayouts.Location = new System.Drawing.Point(0, 0);
@@ -370,188 +365,8 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage1.Size = new System.Drawing.Size(1322, 745);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "App Settings";
+            this.tabPage1.Text = "Settings";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.panel6);
-            this.tabPage3.Controls.Add(this.panel5);
-            this.tabPage3.Location = new System.Drawing.Point(4, 24);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1322, 745);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Layout Editor";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.panel10);
-            this.panel6.Controls.Add(this.lbMonitors);
-            this.panel6.Controls.Add(this.lbVD);
-            this.panel6.Controls.Add(this.panel9);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 0);
-            this.panel6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(29, 29, 29, 0);
-            this.panel6.Size = new System.Drawing.Size(1322, 692);
-            this.panel6.TabIndex = 1;
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.lbLayouts);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(476, 56);
-            this.panel10.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(817, 636);
-            this.panel10.TabIndex = 4;
-            // 
-            // lbLayouts
-            // 
-            this.lbLayouts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbLayouts.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbLayouts.FormattingEnabled = true;
-            this.lbLayouts.HorizontalScrollbar = true;
-            this.lbLayouts.ItemHeight = 18;
-            this.lbLayouts.Location = new System.Drawing.Point(0, 0);
-            this.lbLayouts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lbLayouts.Name = "lbLayouts";
-            this.lbLayouts.ScrollAlwaysVisible = true;
-            this.lbLayouts.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.lbLayouts.Size = new System.Drawing.Size(817, 636);
-            this.lbLayouts.TabIndex = 2;
-            // 
-            // lbMonitors
-            // 
-            this.lbMonitors.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbMonitors.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbMonitors.FormattingEnabled = true;
-            this.lbMonitors.HorizontalScrollbar = true;
-            this.lbMonitors.ItemHeight = 18;
-            this.lbMonitors.Location = new System.Drawing.Point(257, 56);
-            this.lbMonitors.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lbMonitors.Name = "lbMonitors";
-            this.lbMonitors.ScrollAlwaysVisible = true;
-            this.lbMonitors.Size = new System.Drawing.Size(219, 636);
-            this.lbMonitors.TabIndex = 1;
-            this.lbMonitors.SelectedIndexChanged += new System.EventHandler(this.lbMonitors_SelectedIndexChanged);
-            // 
-            // lbVD
-            // 
-            this.lbVD.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lbVD.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbVD.FormattingEnabled = true;
-            this.lbVD.HorizontalScrollbar = true;
-            this.lbVD.ItemHeight = 18;
-            this.lbVD.Location = new System.Drawing.Point(29, 56);
-            this.lbVD.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.lbVD.Name = "lbVD";
-            this.lbVD.ScrollAlwaysVisible = true;
-            this.lbVD.Size = new System.Drawing.Size(228, 636);
-            this.lbVD.TabIndex = 0;
-            this.lbVD.SelectedIndexChanged += new System.EventHandler(this.lbVD_SelectedIndexChanged);
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.label3);
-            this.panel9.Controls.Add(this.label2);
-            this.panel9.Controls.Add(this.label1);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel9.Location = new System.Drawing.Point(29, 29);
-            this.panel9.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1264, 27);
-            this.panel9.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(444, 0);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 15);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Layouts";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 0);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 15);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Virtual Desktops";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(225, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Monitors";
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.btnHideTaskbar);
-            this.panel5.Controls.Add(this.btnClearViewLayouts);
-            this.panel5.Controls.Add(this.btnShowHideSelectedLayout);
-            this.panel5.Controls.Add(this.btnShowHideLayoutList);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(0, 692);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1322, 53);
-            this.panel5.TabIndex = 0;
-            // 
-            // btnHideTaskbar
-            // 
-            this.btnHideTaskbar.Location = new System.Drawing.Point(436, 17);
-            this.btnHideTaskbar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnHideTaskbar.Name = "btnHideTaskbar";
-            this.btnHideTaskbar.Size = new System.Drawing.Size(112, 27);
-            this.btnHideTaskbar.TabIndex = 3;
-            this.btnHideTaskbar.Text = "Hide Taskbar";
-            this.btnHideTaskbar.UseVisualStyleBackColor = true;
-            this.btnHideTaskbar.Click += new System.EventHandler(this.btnHideTaskbar_Click);
-            // 
-            // btnClearViewLayouts
-            // 
-            this.btnClearViewLayouts.Location = new System.Drawing.Point(316, 17);
-            this.btnClearViewLayouts.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnClearViewLayouts.Name = "btnClearViewLayouts";
-            this.btnClearViewLayouts.Size = new System.Drawing.Size(112, 27);
-            this.btnClearViewLayouts.TabIndex = 2;
-            this.btnClearViewLayouts.Text = "Clear View";
-            this.btnClearViewLayouts.UseVisualStyleBackColor = true;
-            this.btnClearViewLayouts.Click += new System.EventHandler(this.btnClearViewLayouts_Click);
-            // 
-            // btnShowHideSelectedLayout
-            // 
-            this.btnShowHideSelectedLayout.Location = new System.Drawing.Point(149, 17);
-            this.btnShowHideSelectedLayout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnShowHideSelectedLayout.Name = "btnShowHideSelectedLayout";
-            this.btnShowHideSelectedLayout.Size = new System.Drawing.Size(160, 27);
-            this.btnShowHideSelectedLayout.TabIndex = 1;
-            this.btnShowHideSelectedLayout.Text = "View Selected Layout(s)";
-            this.btnShowHideSelectedLayout.UseVisualStyleBackColor = true;
-            this.btnShowHideSelectedLayout.Click += new System.EventHandler(this.btnShowHideSelectedLayout_Click);
-            // 
-            // btnShowHideLayoutList
-            // 
-            this.btnShowHideLayoutList.Location = new System.Drawing.Point(29, 17);
-            this.btnShowHideLayoutList.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnShowHideLayoutList.Name = "btnShowHideLayoutList";
-            this.btnShowHideLayoutList.Size = new System.Drawing.Size(112, 27);
-            this.btnShowHideLayoutList.TabIndex = 0;
-            this.btnShowHideLayoutList.Text = "View Layout(s)";
-            this.btnShowHideLayoutList.UseVisualStyleBackColor = true;
-            this.btnShowHideLayoutList.Click += new System.EventHandler(this.btnShowHideLayoutList_Click);
             // 
             // tabPage2
             // 
@@ -726,12 +541,6 @@
             this.ctxmNotifyIcon.ResumeLayout(false);
             this.tabLayouts.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
-            this.panel5.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
@@ -773,20 +582,6 @@
         private System.Windows.Forms.Button btnRemoveWindowInFG;
         private System.Windows.Forms.Button btnRefreshWindowsInFG;
         private System.Windows.Forms.Button btnSaveFgGroups;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.ListBox lbMonitors;
-        private System.Windows.Forms.ListBox lbVD;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel10;
-        private System.Windows.Forms.ListBox lbLayouts;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnShowHideSelectedLayout;
-        private System.Windows.Forms.Button btnShowHideLayoutList;
-        private System.Windows.Forms.Button btnClearViewLayouts;
         private System.Windows.Forms.ToolStripMenuItem mniRefreshTaskBars;
         private System.Windows.Forms.ToolStripMenuItem mniToggleTabBarAlwaysOnTop;
         private System.Windows.Forms.ToolStripMenuItem mniSaveDesktop;
@@ -797,10 +592,11 @@
         private System.Windows.Forms.ToolStripMenuItem mniToggleTabBarVisible;
         private System.Windows.Forms.ToolStripMenuItem mniTaskBarHide;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.Button btnHideTaskbar;
         private System.Windows.Forms.ToolStripMenuItem mniCenterTaskbarIcons;
         private System.Windows.Forms.ToolStripMenuItem mniTransparentTaskbar;
         private System.Windows.Forms.ToolStripMenuItem mniResetAllWindows;
+        private System.Windows.Forms.ToolStripMenuItem mniSettings;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 

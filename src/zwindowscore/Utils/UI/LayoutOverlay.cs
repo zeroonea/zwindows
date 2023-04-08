@@ -102,30 +102,20 @@ namespace zwindowscore.Utils.UI
 
         public static void ShowOverlay(IntPtr hwndOwner, int x, int y, int width, int height)
         {
-            if(_current != null)
-            {
-                if (_current.IsDisposed)
-                {
-                    _current = null;
-                }
-            }
-
             if(_current == null)
             {
                 _current = new LayoutOverlay();
+                _current.Show();
             }
 
-            if(hwndOwner != IntPtr.Zero)
+            if (hwndOwner != IntPtr.Zero)
             {
                 _current.SetOwner(hwndOwner);
             }
-            
+
             _current.Location = new Point(x, y);
             _current.Width = width;
             _current.Height = height;
-
-            
-            _current.Show();
         }
 
         public static void ShowOverlay(int x, int y, int width, int height)
@@ -141,7 +131,7 @@ namespace zwindowscore.Utils.UI
                 _current.Dispose();
                 _current = null;
             }
-            if (_isTopMostDefault)
+            if (_isTopMostDefault && _owner != IntPtr.Zero)
             {
                 Win32Helper.SetWindowPos(_owner,
                     Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnlyNotActive);

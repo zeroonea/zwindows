@@ -10,7 +10,7 @@ namespace zwindowscore.Utils.UI
             this.Visible = false;
             this.FormBorderStyle = FormBorderStyle.None;
             this.ShowInTaskbar = false;
-            this.Owner = owner;
+            if(owner != null) this.Owner = owner;
             this.MinimizeBox = false;
             this.MaximizeBox = false;
         }

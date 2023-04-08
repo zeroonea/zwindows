@@ -57,6 +57,7 @@ namespace zwindowscore.Utils
             _label.Size = new System.Drawing.Size(Global.Settings.TabButtonWidth - labelX, Global.Settings.TabButtonHeight);
             _label.TextAlign = ContentAlignment.MiddleLeft;
             _label.UseCompatibleTextRendering = true;
+            //_label.Enabled = false;
 
             _tooltip = new ToolTip();
             _tooltip.SetToolTip(_label, "Click to active");
@@ -67,6 +68,7 @@ namespace zwindowscore.Utils
             _icon.Height = Global.Settings.TabButtonIconSize;
             _icon.SizeMode = PictureBoxSizeMode.StretchImage;
             _icon.Location = new Point(0, tmp);
+            _icon.Enabled = false;
             
             _lblDesktopIndex = new Label();
             _lblDesktopIndex.Text = "";
@@ -78,6 +80,7 @@ namespace zwindowscore.Utils
             _lblDesktopIndex.TextAlign = ContentAlignment.BottomLeft;
             _lblDesktopIndex.UseCompatibleTextRendering = true;
             _lblDesktopIndex.Parent = _icon;
+            _lblDesktopIndex.Visible = false;
             
             Panel = new CustomPanel();
             Panel.Margin = new Padding(0);
@@ -89,11 +92,11 @@ namespace zwindowscore.Utils
             Panel.Cursor = Cursors.Hand;
 
             _label.MouseClick += Panel_Click;
-            _icon.MouseClick += Panel_Click;
+            //_icon.MouseClick += Panel_Click;
             Panel.MouseClick += Panel_Click;
             
-            _icon.DoubleClick += Panel_DoubleClick;
             _label.DoubleClick += Panel_DoubleClick;
+            //_icon.DoubleClick += Panel_DoubleClick;
             Panel.DoubleClick += Panel_DoubleClick;
 
             Panel.MouseDown += Panel_MouseDown;
@@ -104,9 +107,9 @@ namespace zwindowscore.Utils
             _label.MouseMove += Panel_MouseMove;
             _label.MouseUp += Panel_MouseUp;
 
-            _icon.MouseDown += Panel_MouseDown;
-            _icon.MouseMove += Panel_MouseMove;
-            _icon.MouseUp += Panel_MouseUp;
+            //_icon.MouseDown += Panel_MouseDown;
+            //_icon.MouseMove += Panel_MouseMove;
+            //_icon.MouseUp += Panel_MouseUp;
 
 
             //_icon.AllowDrop = true;
@@ -114,7 +117,7 @@ namespace zwindowscore.Utils
             Panel.AllowDrop = true;
             Panel.DragOver += Panel_DragOver;
             //_icon.DragOver += Panel_DragOver;
-            //_label.DragOver += Panel_DragOver;
+            _label.DragOver += Panel_DragOver;
             Panel.DragOver += Panel_DragOver;
         }
 
@@ -231,6 +234,18 @@ namespace zwindowscore.Utils
             Win32Helper.SetDesktopAndMonitor(Parent.Handle);
             Win32Helper.SnapWindowToLayout(Hwnd, Global.CurrentMonitor, Layout);
             Win32Helper.BringWindowToFront(Hwnd);
+        }
+
+        public void Topmost(bool isActive)
+        {
+            if(isActive)
+            {
+                Win32Helper.SetWindowPos(Hwnd, Win32Helper.HWND_TOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnly);
+            }
+            else
+            {
+                Win32Helper.SetWindowPos(Hwnd, Win32Helper.HWND_NOTOPMOST, 0, 0, 0, 0, WindowPosFlags.ShowOnly);
+            }
         }
 
         public string Text

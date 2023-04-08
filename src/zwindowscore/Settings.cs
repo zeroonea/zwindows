@@ -14,6 +14,7 @@ using zwindowscore.Utils;
 using zwindowscore.Properties;
 using System.Threading.Tasks;
 using zwindowscore.Options;
+using TaskbarTool;
 
 namespace zwindowscore
 {
@@ -71,14 +72,6 @@ namespace zwindowscore
             lbForegroundGroups.DataSource = Global.ForegroundGroups;
             lbForegroundGroups.DisplayMember = "Title";
 
-            lbVD.DataSource = Global.VirtualDesktops;
-            lbVD.DisplayMember = "Name";
-
-            lbMonitors.DataSource = Global.MonitorDevices;
-            lbMonitors.DisplayMember = "Name";
-
-            lbLayouts.DisplayMember = "Title";
-            
             
             txtSelectedWindow.DataBindings.Add("Text", Global.CurrentForegroundWindowText, 
                 "Text", true, DataSourceUpdateMode.OnPropertyChanged);
@@ -126,7 +119,10 @@ namespace zwindowscore
             Console.WriteLine($"Switch to Desktop {Global.CurrentDesktopName}");
 
             MethodInvoker action = delegate {
-                Noti.ShowMessage($"Desktop {Global.CurrentDesktopName}", 1000);
+                if(Global.Settings.NotifyDesktopName)
+                { 
+                    Noti.ShowMessage($"Desktop {Global.CurrentDesktopName}", 1000);
+                }
                 if(Global.Settings.NoTabBarDesktopNames != null 
                     && Global.Settings.NoTabBarDesktopNames.Contains(Global.CurrentDesktopName))
                 {
@@ -193,6 +189,19 @@ namespace zwindowscore
             {
                 mniToggleTabBarVisible.Checked = true;
             }
+
+            
+            if (Global.Settings.HideTaskbars)
+            {
+                mniTaskBarHide.Checked = true;
+                TaskbarTool.Taskbars.ToggleTaskbarsVisibility(false);
+            }
+            else
+            {
+                mniTaskBarHide.Checked = false;
+                TaskbarTool.Taskbars.ToggleTaskbarsVisibility(true);
+            }
+
         }
 
         private void MyRefresh()
@@ -210,7 +219,7 @@ namespace zwindowscore
             if (Global.Settings.MonitorsLayouts.ContainsKey(monitorId))
             {
                 var md = Global.Settings.MonitorsLayouts[monitorId];
-                lbLayouts.DataSource = md.Layouts.Where(p => p.DesktopName == desktopName || p.DesktopName == "default" || string.IsNullOrEmpty(p.DesktopName)).ToList();
+                //lbLayouts.DataSource = md.Layouts.Where(p => p.DesktopName == desktopName || p.DesktopName == "default" || string.IsNullOrEmpty(p.DesktopName)).ToList();
             }
         }
 
@@ -526,46 +535,46 @@ namespace zwindowscore
             File.WriteAllText(Global.GetForegroundGroupsFilePath(), json);
         }
 
-        private void lbVD_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
-            var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
-            if(vd != null && md != null)
-            {
-                LoadLayouts(vd.Name, md.Id.ToLower());
-            }
-        }
+        //private void lbVD_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
+        //    var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
+        //    if(vd != null && md != null)
+        //    {
+        //        LoadLayouts(vd.Name, md.Id.ToLower());
+        //    }
+        //}
 
-        private void lbMonitors_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
-            var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
-            if(vd != null && md != null)
-            {
-                LoadLayouts(vd.Name, md.Id.ToLower());
-            }
-        }
+        //private void lbMonitors_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
+        //    var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
+        //    if(vd != null && md != null)
+        //    {
+        //        LoadLayouts(vd.Name, md.Id.ToLower());
+        //    }
+        //}
 
-        private void btnShowHideSelectedLayout_Click(object sender, EventArgs e)
-        {
-            var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
-            var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
-            if(vd != null && md != null)
-            {
-                var indexes = lbLayouts.SelectedIndices.OfType<int>().ToArray();
-                ToggleShowHideLayouts(true, vd.Name, md.Id.ToLower(), indexes);
-            }
-        }
+        //private void btnShowHideSelectedLayout_Click(object sender, EventArgs e)
+        //{
+        //    var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
+        //    var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
+        //    if(vd != null && md != null)
+        //    {
+        //        var indexes = lbLayouts.SelectedIndices.OfType<int>().ToArray();
+        //        ToggleShowHideLayouts(true, vd.Name, md.Id.ToLower(), indexes);
+        //    }
+        //}
 
-        private void btnShowHideLayoutList_Click(object sender, EventArgs e)
-        {
-            var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
-            var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
-            if(vd != null && md != null)
-            {
-                ToggleShowHideLayouts(true, vd.Name, md.Id.ToLower());
-            }
-        }
+        //private void btnShowHideLayoutList_Click(object sender, EventArgs e)
+        //{
+        //    var vd = (VirtualDesktopInfo)lbVD.SelectedItem;
+        //    var md = (MonitorDeviceDefinition)lbMonitors.SelectedItem;
+        //    if(vd != null && md != null)
+        //    {
+        //        ToggleShowHideLayouts(true, vd.Name, md.Id.ToLower());
+        //    }
+        //}
 
         private void btnClearViewLayouts_Click(object sender, EventArgs e)
         {
@@ -660,6 +669,13 @@ namespace zwindowscore
         private void mniResetAllWindows_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void mniSettings_Click(object sender, EventArgs e)
+        {
+            Show();  
+            Visible = true;
+            this.WindowState = FormWindowState.Normal;  
         }
     }
 }
