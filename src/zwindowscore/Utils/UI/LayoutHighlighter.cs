@@ -147,11 +147,12 @@ namespace zwindowscore
             }
             else
             {
-                var le = new LayoutEditor();
-                le.ValueChangedCallback = ValueChangedCallback;
-                le.Text = $"Layout #{_rectangle.Text}";
-                le.SetData(_monitor, _layout);
-                le.ShowDialog(_rectangle.Label.Form);
+                if(LayoutEditor.instance == null)
+                { 
+                    var le = new LayoutEditor();
+                    LinkLayoutEditor(le);
+                    LayoutEditor.instance = le;
+                }
             }
         }
 
@@ -178,6 +179,20 @@ namespace zwindowscore
                 .ToList()
                 .ForEach(p => p._rectangle.Opacity = _opacity);
             _rectangle.Opacity = 1;
+
+            if(LayoutEditor.instance != null)
+            {
+                LinkLayoutEditor(LayoutEditor.instance);
+            }
+        }
+
+        private void LinkLayoutEditor(LayoutEditor le)
+        {
+            le.ValueChangedCallback = ValueChangedCallback;
+            le.Text = $"Layout #{_rectangle.Text}";
+            le.SetData(_monitor, _layout);
+            le.StartPosition = FormStartPosition.CenterScreen;
+            le.Show();
         }
 
         public void Dispose()

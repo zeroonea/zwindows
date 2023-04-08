@@ -311,6 +311,15 @@ namespace zwindowscore
                     }
                 }
             }
+            else
+            {
+                if(LayoutEditor.instance != null)
+                {
+                    LayoutEditor.instance.Close();
+                    LayoutEditor.instance.Dispose();
+                    LayoutEditor.instance = null;
+                }
+            }
         }
 
         private void Event(object sender, EventArgs e) { Console.WriteLine("Left mouse click!"); }

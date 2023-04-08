@@ -22,6 +22,8 @@ namespace zwindowscore
 
         private bool noChanged = false;
 
+        public static LayoutEditor instance = null;
+
         public LayoutEditor()
         {
             InitializeComponent();
@@ -37,6 +39,12 @@ namespace zwindowscore
             nOffsetB.ValueChanged += ValueChangedEvent;
 
             cbDesktops.SelectedIndexChanged += ValueChangedEvent;
+            this.FormClosed += LayoutEditor_FormClosed;
+        }
+
+        private void LayoutEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            instance = null;
         }
 
         private void ValueChangedEvent(object sender, EventArgs e)
