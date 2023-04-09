@@ -203,7 +203,7 @@ namespace zwindowscore.Utils
                 Win32Helper.PauseWinEventHook = true;
                 VirtualDesktop.MoveToDesktop(tabBtn.Hwnd, vd.VirtualDesktop);
                 Win32Helper.PauseWinEventHook = false;
-                tabBtn.Desktop = vd.Index;
+                tabBtn.Desktop = vd.VirtualDesktop.Name;
             }
         }
 
@@ -259,7 +259,7 @@ namespace zwindowscore.Utils
             var vd = Win32Helper.GetDesktop(tbtn.Hwnd);
             if(vd != null)
             {
-                tbtn.Desktop = Win32Helper.GetDesktopIndex(vd);
+                tbtn.Desktop = vd.Name;
             }
             return tbtn;
         }

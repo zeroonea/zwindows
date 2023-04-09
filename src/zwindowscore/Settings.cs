@@ -15,6 +15,7 @@ using zwindowscore.Properties;
 using System.Threading.Tasks;
 using zwindowscore.Options;
 using TaskbarTool;
+using System.Diagnostics;
 
 namespace zwindowscore
 {
@@ -132,6 +133,10 @@ namespace zwindowscore
                 {
                     ToggleTabBarVisible(true);
                 }
+                foreach(var tab in Global.TabButtonWindows.Values)
+                {
+                    tab.DesktopChanged(Global.CurrentVirtualDesktop.Name);
+                }
             };
             this.BeginInvoke(action);
         }
@@ -177,6 +182,7 @@ namespace zwindowscore
             _controller.SelectBitmap(Resources.record);
             _controller.MyContextMenuStrip = ctxmNotifyIcon;
             _controller.Location = Cursor.Position;
+            _controller.DoubleClick += _controller_DoubleClick;
             _controller.Show();
 
             Noti.ShowMessage($"Desktop {Global.CurrentDesktopName}", 2000);
@@ -202,6 +208,11 @@ namespace zwindowscore
                 TaskbarTool.Taskbars.ToggleTaskbarsVisibility(true);
             }
 
+        }
+
+        private void _controller_DoubleClick(object sender, EventArgs e)
+        {
+            Debug.WriteLine("Move all tabsbar closer");
         }
 
         private void MyRefresh()

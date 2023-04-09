@@ -19,7 +19,10 @@ namespace zwindowscore.Utils
         public ScreenTabButtonsBar Parent { get; set; }
         public MonitorLayout Layout { get; set; }
         private Color _iconColor;
+        private Color _currentColor;
+        private Color _currentTextColor;
         private bool _isActive;
+        private string _desktopName;
         public bool TitleEvent { get; set; } = false;
         public bool IsWindowTopMost
         {
@@ -30,11 +33,13 @@ namespace zwindowscore.Utils
         }
         private int DragState = 0;
 
-        public int Desktop
+        public string Desktop
         {
             set
             {
-                _lblDesktopIndex.Text = $"{value + 1}";
+                ChangeDesktop(value, Global.CurrentDesktopName);
+                _tooltip.SetToolTip(_label, $"Desktop: {value}");
+                _label.ResumeLayout();
             }
         }
 
@@ -126,8 +131,8 @@ namespace zwindowscore.Utils
             if(DragState != 0)
             { 
                 DragState = 0;
-                BackColor = _iconColor;
-                TextColor = Color.White;
+                BackColor = _currentColor;
+                TextColor = _currentTextColor;
                 //Console.WriteLine($"DragState: {DragState}");
             }
         }
@@ -248,6 +253,39 @@ namespace zwindowscore.Utils
             }
         }
 
+        public void DesktopChanged(string desktopName)
+        {
+            if(desktopName != _desktopName)
+            {
+                _currentColor = Color.Black;
+                _currentTextColor = Color.Gray;
+            }
+            else
+            {
+                _currentColor = _iconColor;
+                _currentTextColor = Color.White;
+            }
+            BackColor = _currentColor;
+            TextColor = _currentTextColor;
+        }
+
+        public void ChangeDesktop(string desktopName, string currentDesktopName)
+        {
+            if(desktopName != currentDesktopName)
+            {
+                _currentColor = Color.Black;
+                _currentTextColor = Color.Gray;
+            }
+            else
+            {
+                _currentColor = _iconColor;
+                _currentTextColor = Color.White;
+            }
+            BackColor = _currentColor;
+            TextColor = _currentTextColor;
+            _desktopName = desktopName;
+        }
+
         public string Text
         {
             get { return _label.Text; }
@@ -288,7 +326,8 @@ namespace zwindowscore.Utils
             {
                 if(value == null) return;
                 _iconColor = MyMath.CalculateAverageColor(value.ToBitmap(), 2);
-                BackColor = _iconColor;
+                _currentColor = _iconColor;
+                BackColor = _currentColor;
                 _icon.Image = value.ToBitmap();
             }
         }
@@ -311,7 +350,7 @@ namespace zwindowscore.Utils
                 }
                 else
                 {
-                    BackColor = _iconColor;
+                    BackColor = _currentColor;
                     _lblDesktopIndex.ForeColor = Color.Black;
                     //TextColor = Color.White;
                 }
@@ -320,7 +359,7 @@ namespace zwindowscore.Utils
 
         public void ResetBackColor()
         {
-            BackColor = _iconColor;
+            BackColor = _currentColor;
         }
 
         public class CustomPanel : Panel

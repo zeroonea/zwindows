@@ -689,7 +689,7 @@ namespace zwindowscore
             return (exStyle & WS_EX_TOPMOST) == WS_EX_TOPMOST;
         }
 
-        public static bool IsAltTabWindow(IntPtr hWnd)
+        public static bool IsAltTabWindow(IntPtr hWnd, bool ignored_cloaked_shell_windows = false)
         {
             // The window must be a root owner
             if (GetAncestor(hWnd, GetAncestorFlags.GetRootOwner) != hWnd)
@@ -699,11 +699,15 @@ namespace zwindowscore
             }
 
             // The window must not be cloaked by the shell
-            DwmGetWindowAttribute(hWnd, DwmWindowAttribute.Cloaked, out uint cloaked, sizeof(uint));
-            if (cloaked == DWM_CLOAKED_SHELL)
-            {
-                Debug.WriteLine("cloaked shell");
-                return false;
+            // (Note: Windows in other desktop will marked cloaked shell)
+            if(!ignored_cloaked_shell_windows)
+            { 
+                DwmGetWindowAttribute(hWnd, DwmWindowAttribute.Cloaked, out uint cloaked, sizeof(uint));
+                if (cloaked == DWM_CLOAKED_SHELL)
+                {
+                    Debug.WriteLine("cloaked shell");
+                    return false;
+                }
             }
 
             // The window must not have the extended style WS_EX_TOOLWINDOW

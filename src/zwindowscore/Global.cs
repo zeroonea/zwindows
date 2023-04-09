@@ -33,6 +33,7 @@ namespace zwindowscore
 
         public static BindingList<MonitorDeviceDefinition> MonitorDevices = new BindingList<MonitorDeviceDefinition>();
         public static BindingList<VirtualDesktopInfo> VirtualDesktops = new BindingList<VirtualDesktopInfo>();
+        public static VirtualDesktopInfo CurrentVirtualDesktop;
 
         public static MonitorDevice CurrentMonitor;
         public static String CurrentDesktopName;
@@ -103,6 +104,7 @@ namespace zwindowscore
                 if(cd != null)
                 { 
                     Global.CurrentDesktopName = Win32Helper.GetDesktopName(cd.Id);
+                    Global.CurrentVirtualDesktop = Global.VirtualDesktops.Where(p => p.VirtualDesktop == cd).FirstOrDefault();
                 }
             }
             else
@@ -443,7 +445,7 @@ namespace zwindowscore
                 Debug.WriteLine("----");
                 Debug.WriteLine(title);
 
-                if (!Win32Helper.IsAltTabWindow(hWnd))
+                if (!Win32Helper.IsAltTabWindow(hWnd, true))
                 {
                     return true;
                 }
