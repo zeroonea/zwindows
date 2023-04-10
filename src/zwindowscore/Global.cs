@@ -368,26 +368,30 @@ namespace zwindowscore
         {
             MonitorLayout nearestLayout = null;
 
-            foreach(var mid in Settings.MonitorsLayouts.Keys)
+            int x = 0;
+            int y = 0;
+
+            if (mousePoint.HasValue)
             {
+                x = mousePoint.Value.X;
+                y = mousePoint.Value.Y;
+            }
+            else if (windowPos.HasValue)
+            {
+                x = windowPos.Value.Left;
+                y = windowPos.Value.Top;
+            }
+
+            var nearestDistance = 0;
+
+            foreach (var mdi in MonitorDevices)
+            {
+                var mid = mdi.Id;
+                if (!Settings.MonitorsLayouts.ContainsKey(mid)) continue;
+
                 if(monitorId != null && monitorId != mid) continue;
 
                 var monitor = Settings.MonitorsLayouts[mid];
-                int x = 0;
-                int y = 0;
-
-                if (mousePoint.HasValue)
-                {
-                    x = mousePoint.Value.X;
-                    y = mousePoint.Value.Y;
-                }
-                else if(windowPos.HasValue)
-                {
-                    x = windowPos.Value.Left;
-                    y = windowPos.Value.Top;
-                }
-
-                var nearestDistance = 0;
 
                 foreach(var layout in monitor.Layouts)
                 {
