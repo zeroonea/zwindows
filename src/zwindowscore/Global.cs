@@ -15,6 +15,7 @@ using System.Drawing;
 using static zwindowscore.Monitor;
 using zwindowscore.Options;
 using WindowsDesktop;
+using TaskbarTool;
 
 namespace zwindowscore
 {
@@ -48,6 +49,8 @@ namespace zwindowscore
 
         public static int GlobalMouseDragStartX;
         public static int GlobalMouseDragStartY;
+
+        public static TaskbarSize TaskbarSize;
 
         public static List<IntPtr> IgnoredMinimizeEvents = new List<IntPtr>();
 
@@ -192,6 +195,7 @@ namespace zwindowscore
         {
             MonitorDevices.Clear();
             //Monitor.GetActiveMonitors();
+            Global.TaskbarSize = new TaskbarSize();
             var monitors = Monitor.GetMonitors();
             if(monitors != null)
             {
@@ -317,8 +321,10 @@ namespace zwindowscore
 
         public static void UpdateLayout(MonitorDevice monitor, MonitorLayout layout)
         {
-            var mw = Settings.HideTaskbars ? monitor.RealWidth : monitor.Width;
-            var mh = Settings.HideTaskbars ? monitor.RealHeight : monitor.Height;
+            var mw = Global.TaskbarSize.AutoHide 
+                || Global.Settings.HideTaskbars ? monitor.RealWidth : monitor.Width;
+            var mh = Global.TaskbarSize.AutoHide 
+                || Global.Settings.HideTaskbars ? monitor.RealHeight : monitor.Height;
 
             layout.Left = (mw * layout.X) / 100;
             layout.Top = (mh * layout.Y) / 100;

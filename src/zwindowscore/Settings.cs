@@ -208,6 +208,9 @@ namespace zwindowscore
                 TaskbarTool.Taskbars.ToggleTaskbarsVisibility(true);
             }
 
+            //TaskbarSize tb = new TaskbarSize();
+            //Console.WriteLine("w:{0}, h:{1} - hide:{2}", tb.Size.Width, tb.Size.Height, tb.AutoHide);
+
         }
 
         private void _controller_DoubleClick(object sender, EventArgs e)
@@ -224,15 +227,15 @@ namespace zwindowscore
             ClearLayoutHighlighters();
         }
 
-        private void LoadLayouts(string desktopName, string monitorId)
-        {
-            monitorId = monitorId.ToLower();
-            if (Global.Settings.MonitorsLayouts.ContainsKey(monitorId))
-            {
-                var md = Global.Settings.MonitorsLayouts[monitorId];
-                //lbLayouts.DataSource = md.Layouts.Where(p => p.DesktopName == desktopName || p.DesktopName == "default" || string.IsNullOrEmpty(p.DesktopName)).ToList();
-            }
-        }
+        //private void LoadLayouts(string desktopName, string monitorId)
+        //{
+        //    monitorId = monitorId.ToLower();
+        //    if (Global.Settings.MonitorsLayouts.ContainsKey(monitorId))
+        //    {
+        //        var md = Global.Settings.MonitorsLayouts[monitorId];
+        //        //lbLayouts.DataSource = md.Layouts.Where(p => p.DesktopName == desktopName || p.DesktopName == "default" || string.IsNullOrEmpty(p.DesktopName)).ToList();
+        //    }
+        //}
 
         public static bool ClearLayoutHighlighters(string vdn = null)
         {
@@ -338,7 +341,10 @@ namespace zwindowscore
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            //MouseHook.Stop();
+            if (Global.Settings.HideTaskbars)
+            {
+                TaskbarTool.Taskbars.ToggleTaskbarsVisibility(true);
+            }
         }
 
         private void btnShowSettingsFromMemory_Click(object sender, EventArgs e)
@@ -645,6 +651,7 @@ namespace zwindowscore
         private void btnHideTaskbar_Click(object sender, EventArgs e)
         {
             mniTaskBarHide.Checked = !mniTaskBarHide.Checked;
+            Global.Settings.HideTaskbars = mniTaskBarHide.Checked;
             TaskbarTool.Taskbars.ToggleTaskbarsVisibility(!mniTaskBarHide.Checked);
         }
 

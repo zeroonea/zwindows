@@ -31,7 +31,7 @@ namespace zwindowscore.Options
         public bool LockTabButtonBetweenDesktops { get; set; } = false;
         public bool NotifyDesktopName { get; set; } = false;
 
-        public bool HideTaskbars { get; set; } = true;
+        public bool HideTaskbars { get; set; } = false;
 
         public List<string> IgnoredProcessNames = new List<string>()
         {

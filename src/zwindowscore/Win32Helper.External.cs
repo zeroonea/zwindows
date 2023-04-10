@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using zwindowscore.Enum;
 using zwindowscore.Struct;
 using System.Text;
+using TaskbarTool;
 
 namespace zwindowscore
 {
